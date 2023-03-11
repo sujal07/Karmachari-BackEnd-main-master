@@ -1,0 +1,102 @@
+{% load static %} 
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{%static 'assets/css/Leaves.css' %}">
+    <link rel="stylesheet" href="{%static 'assets/css/navbar.css'%}">
+
+    <title>Leaves</title>
+</head>
+
+<body>
+    {%include 'Nav_Sidebar.html'%}
+    <section class="hero_leave">
+        <div class="title-text">
+            <h1>Leaves</h1>
+        </div>
+        <div class="container">
+            <div class="apply-leave">
+                <div class="heading">
+                    <h2>Apply For Leave</h2>
+                </div>
+
+                <form action="" method=POST class="input-section-container">
+                    {% csrf_token %}
+                    <div class="flexbox">
+                        <h4 class="question_leave">Leave Subject</h4>
+                        {{form.subject}}
+                    </div>
+                    <div class="flexbox">
+                        <h4 class="question_leave">Leave Date</h4>
+                        {{form.date}}
+                    </div>
+                    <div class="flexbox">
+                        <h4 class="question_leave">Duration</h4>
+                        {{form.duration}}
+                    </div>
+                    <div class="flexbox  bigbox">
+                        <h4 class="question_leave">Leave message</h4>
+                        {{form.message}}
+                    </div>
+                    <div class="flexbox">
+                        <h4 class="question_leave">Leave Type</h4>
+                        {{form.leave_type}}
+                    </div> 
+                    {% comment %} {{form.as_p}} {% endcomment %}
+                    <input type="submit" class="submit_btn" value="Submit">
+                </form>
+            </div>
+            <div class="leave-records">
+                <div class="heading">
+                    <h2>My Leaves</h2>
+                </div>
+                <div class="show-option">
+                    <p>Show </p>
+                    <select name="" id="numbers" class="number-of-item">
+                        <option value="2">2</option>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                    </select>
+                    <p> Entities</p>
+                </div>
+                <div class="table-container">
+                    <table class="content-table">
+                        <thead>
+                            <tr>
+                                <th class="SN">SN</th>
+                                <th class="subject">Subject</th>
+                                <th class="Date_lv">Dates</th>
+                                <th class="message_lv">Message</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            
+                            {% for leave in leaves reversed %}
+                            <tr>
+                                
+                                <td class="SN">{{ forloop.counter}}</td>
+                                <td class="subject leave_table_left">{{leave.subject}}</td>
+                                <!-- <td>{{leave.duration}}</td> -->
+                                <td class="Date_lv">{{leave.date}}</td>
+                                <td class="message_lv leave_table_left">{{leave.message|truncatewords:20}}</td>
+                                <td>{{leave.leave_type}}</td>
+                                <td><div class="{% if leave.status == 'Pending' %}s0{% elif leave.status == 'Approved' %}s1 {%else%} s2 {% endif %} status_lv">{{leave.status}}</div></td>
+                            </tr>
+                            {% endfor %}
+                            </tr>
+                        </tbody>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>

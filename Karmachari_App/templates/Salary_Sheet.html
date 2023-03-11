@@ -1,0 +1,149 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{%static 'assets/Css/Salary.css'%}">
+        <link rel="stylesheet" href="{%static 'assets/Css/Navbar.css'%}">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+        <title>Salary</title>
+    </head>
+
+    <body>
+        {% include 'Nav_Sidebar.html' %}
+        <div class="container">
+            <div class="top-nav">
+                <h2>Salaries</h2>
+            </div>
+            <main>
+                <hr class="horizontal-line">
+                <p>
+                <div class="view-notice">Salary slip</div>
+                </p>
+                <div class="main-notice">
+                    <div class="main-header">
+                        <p class="main-text">Show</p>
+                        <select class="main-text-middle">
+                            <option value="notice">2</option>
+                            <option value="notice">5</option>
+                            <option value="notice">10</option>
+                        </select>
+                        <p class="main-text-right">entries</p>
+                    </div>
+                    <input class="main-bottom" type="text" name="search" placeholder="search">
+                </div>
+                <div class="table-holder">
+                    <table class="content-table">
+                        <thead>
+
+                            <tr>
+                                <th class="months">SALARY MONTHS</th>
+                                <th class="money">EARNINGS<i class="bi bi-cash list-icon"></i></th>
+                                <th class="money">DEDUCTIONS<i class="bi bi-cash list-icon"></i></th>
+                                <th class="money">NETSALARY   <i class="bi bi-cash-stack list-icon"></i></i></th>
+                                <th class="download">ACTIONS</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+                            <optgroup>
+                                <tr>
+                                    <td>Februry 2023</td>
+                                    <td>58000.00</td>
+                                    <td>5510.00</td>
+                                    <td>52490.00</td>
+                                    <td><i class="bi bi-download"></i></td>
+                                </tr>
+                                <tr>
+                                    <td>March 2023</td>
+                                    <td>58000.00</td>
+                                    <td>5510.00</td>
+                                    <td>52490.00</td>
+                                    <td><i class="bi bi-download"></i></td>
+                                    <!-- <img class="img-sal" src="Fontend-design/images/download.jpeg" alt="">  -->
+                                </tr>
+                                <tr>
+                                    <td>March 2023</td>
+                                    <td>58000.00</td>
+                                    <td>5510.00</td>
+                                    <td>52490.00</td>
+                                    <td><i class="bi bi-download"></i></td>
+                                    <!-- <img class="img-sal" src="Fontend-design/images/download.jpeg" alt="">  -->
+                                </tr>
+                                <tr>
+                                    <td>March 2023</td>
+                                    <td>58000.00</td>
+                                    <td>5510.00</td>
+                                    <td>52490.00</td>
+                                    <td><i class="bi bi-download"></i></td>
+                                    <!-- <img class="img-sal" src="Fontend-design/images/download.jpeg" alt="">  -->
+                                </tr>
+                                <tr>
+                                    <td>March 2023</td>
+                                    <td>58000.00</td>
+                                    <td>5510.00</td>
+                                    <td>52490.00</td>
+                                    <td><i class="bi bi-download"></i></td>
+                                    <!-- <img class="img-sal" src="Fontend-design/images/download.jpeg" alt="">  -->
+                                </tr>
+                                <tr>
+                                    <td>March 2023</td>
+                                    <td>58000.00</td>
+                                    <td>5510.00</td>
+                                    <td>52490.00</td>
+                                    <td><i class="bi bi-download"></i></td>
+                                    <!-- <img class="img-sal" src="Fontend-design/images/download.jpeg" alt="">  -->
+                                </tr>
+                                <tr>
+                                    <td>March 2023</td>
+                                    <td>58000.00</td>
+                                    <td>5510.00</td>
+                                    <td>52490.00</td>
+                                    <td><i class="bi bi-download"></i></td>
+                                    <!-- <img class="img-sal" src="Fontend-design/images/download.jpeg" alt="">  -->
+                                </tr>
+                                <tr>
+                                    <td>March 2023</td>
+                                    <td>58000.00</td>
+                                    <td>5510.00</td>
+                                    <td>52490.00</td>
+                                    <td><i class="bi bi-download"></i></td>
+                                    <!-- <img class="img-sal" src="Fontend-design/images/download.jpeg" alt="">  -->
+                                </tr>
+                                <tr>
+                                    <td>March 2023</td>
+                                    <td>58000.00</td>
+                                    <td>5510.00</td>
+                                    <td>52490.00</td>
+                                    <td><i class="bi bi-download"></i></td>
+                                    <!-- <img class="img-sal" src="Fontend-design/images/download.jpeg" alt="">  -->
+                                </tr>
+                                <tr>
+                                    <td>March 2023</td>
+                                    <td>58000.00</td>
+                                    <td>5510.00</td>
+                                    <td>52490.00</td>
+                                    <td><i class="bi bi-download"></i></td>
+                                    <!-- <img class="img-sal" src="Fontend-design/images/download.jpeg" alt="">  -->
+                                </tr>
+
+
+
+                            </optgroup>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- <div class="footer">
+                <a href="#" class="previous round">&#8249;</a>
+                <a href="#" class="next round">&#8250;</a>
+            </div> -->
+            </main>
+        </div>
+        <script src="{% static 'assets/js/nav_sidebar.js' %}"></script>
+    </body>
+
+</html>

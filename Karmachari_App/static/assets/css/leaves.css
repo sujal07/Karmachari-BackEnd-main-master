@@ -1,0 +1,313 @@
+
+body {
+    height: 100vh;
+    overflow: hidden;
+}
+
+.hero_leave {
+    position: relative;
+    top: 7%;
+    left: 15%;
+    height: 93%;
+    width: 85%;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    /* background-color: rgb(20, 30, var(--hue-color), 0.3) */
+}
+
+.title-text {
+    text-align: left;
+    width: 95%;
+    padding-top: 1rem;
+    color: var(--primary-color);
+}
+.title-text h1{
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-left: 2%;
+}
+
+.container {
+    display: flex;
+    justify-content: space-around;
+    align-items: top;
+    width: 99%;
+    height: 90%;
+    padding: 2.5% .5%;
+    border-radius: 5px;
+}
+
+.apply-leave {
+    /* align-self: center; */
+    background-color: var(--text-light-color);
+    height: 98%;
+    width: 30%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-left: 1%;
+    padding: 1% 2%;
+    border-radius: 5px;
+}
+
+.heading {
+    font-size: .7rem;
+    color: var(--primary-color);
+    text-align: left;
+    width: 100%;
+    height: 10%;
+    margin: 2% 0;
+}
+
+.input-section-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 98%;
+    width: 100%;
+    /* background-color: red; */
+}
+
+.flexbox {
+    height: 10%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    /* background-color: red; */
+}
+.question_leave {
+    font-size: .9rem;
+}
+
+.answer_leave {
+    width: 100%;
+    height: 90%;
+    outline: none;
+}
+
+.bigbox {
+    height: 20%;
+    width: 100%;
+}
+.message-leave
+{
+    width: 100%;
+}
+#text
+{
+    display: none;
+}
+.option-leave {
+    width: 100%;
+}
+
+.submit_btn {
+    height: 9%;
+    width: 25%;
+    border-radius: 10%;
+    outline: none;
+    border: none;
+    font-weight: bold;
+    color: var(--text-light-color);
+    background-color: var(--primary-color);
+    cursor: pointer;
+}
+
+/* ============Right Cntainer========= */
+.leave-records {
+    background-color: var(--text-light-color);
+    height: fit-content;
+    width: 66%;
+    border-radius: 5px;
+    padding: 1% 1%;
+}
+
+.show-option {
+    display: flex;
+    font-size: .9rem;
+    margin: 2% 0;
+}
+
+.number-of-item {
+    font-size: .7rem;
+    margin: 0 .5rem;
+}
+
+/* ===============Table CSS================ */
+
+.table-container {
+    border-collapse: collapse;
+    margin: 25px 0;
+    width: 100%;
+    min-width: 400px;
+    border-radius: 5px 5px 0 0;
+    overflow: scroll;
+    max-height: 450px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+.table-container thead {
+    position: sticky;
+    width: 100%;
+    top: 0;
+}
+
+.table-container thead tr {
+    background-color: var(--primary-color);
+    text-align: center;
+    color: #ffffff;
+    text-align: left;
+    font-weight: bold;
+}
+
+.table-container th,
+.table-container td {
+    padding: 12px 15px;
+    font-size: .75rem;
+    text-align: center;
+}
+
+.table-container tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.table-container tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.table-container tbody tr:last-of-type {
+    border-bottom: 2px solid #009879;
+}
+.SN{
+    width: 8%;
+}
+.subject
+{
+    width: 20%;
+}
+
+.status_lv {
+    text-align: center;
+    border-radius: 5px;
+    padding: 0 .5rem;
+    font-size: .7rem;
+}
+
+.s0 {
+    background-color: grey;
+}
+
+.s1 {
+    background-color: var(--Checkin);
+}
+
+.s2 {
+    background-color: var(--checkout);
+}
+.leave_table_left
+{
+    text-align: left!important;
+}
+@media screen and (max-width:900px) {
+    body {
+        height: fit-content;
+        overflow: scroll;
+    }
+
+    .hero_leave {
+        position: absolute;
+        left: 0;
+        top: 7%;
+        width: 100%;
+        height: fit-content;
+    }
+
+    .container {
+        /* display: none; */
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .apply-leave {
+        width: 97%;
+        height: 550px;
+    }
+    .flexbox {
+        height: 70px;
+        /* background-color: red; */
+        display: flex;
+        padding-bottom: .5rem;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .answer_leave {
+        height: 60%;
+    }
+
+    #message-leave {
+        height: 80%;
+    }
+
+    .bigbox {
+        height: 150px;
+        padding: .1rem 0;
+    }
+
+    .option-leave {
+        padding: .1rem 0;
+    }
+
+    /* MY LEAVES TABLE================= */
+    .leave-records {
+        margin-top: 15px;
+        width: 98%;
+        min-height: 600px;
+        height: fit-content;
+        overflow: hidden;
+    }
+
+    .table-container {
+        padding: 0;
+        height: fit-content;
+        margin: 0;
+        width: 100%;
+        transform: translateX(-1rem);
+        /* background-color: red; */
+        font-size: .7rem;
+    }
+
+    .table-container th,
+    .table-container td {
+        width: 5%;
+    }
+
+    .table-container thead {
+        position: sticky;
+        top: 0;
+    }
+
+    .SN {
+        width: 10px;
+    }
+
+    .message_lv {
+        display: none;
+    }
+
+    .status_lv {
+        padding: 0;
+        color: transparent;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+    }
+
+    .Date_lv {
+        display: none;
+    }
+}

@@ -1,0 +1,66 @@
+{% load static %}
+
+{% for message in messages %}
+<h3>{{message}}</h3>
+{% endfor %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karmachari: Login</title>
+    <link rel="stylesheet" href="{%static 'assets/css/login.css'%}">
+</head>
+<body>
+    <div class="Login_Bar">
+        <a href="#">
+        <img src="{%static '/assets/img/img.png'%}" alt="Logo" id="applogo" href="#">
+        </a>
+        <div id="clock">
+            <span id="hrs">00 </span>:<span id="min">00 </span>:<span id="sec">00 </span>
+            <span id="session">AM</span>
+        </div>
+        <form  action="login" method='POST'>
+            {% csrf_token %}
+            <input type="text" name='username' placeholder="Enter ID"onfocus="this.placeholder = ''"
+            onblur="this.placeholder = 'Enter ID'"/>
+            <input type="password" name='password' placeholder="Enter Password" onfocus="this.placeholder = ''"
+            onblur="this.placeholder = 'Enter Password'"/> <br>
+            <input type="Submit" id="Login_Btn" value="Login"/><br>
+            <a href="/reset_password" id="forgot_pw">Forgot Password?</a>
+        </form>
+    </div>
+    <script>
+        function displayTime()
+{
+var dateTime = new Date();
+var hrs=dateTime.getHours();
+var min=dateTime.getMinutes();
+var sec=dateTime.getSeconds();
+var ses = document.getElementById('session');
+if(hrs>12)
+{
+    hrs-=12;
+    ses.textContent='PM'
+}
+else
+{
+    ses.textContent='AM'
+}
+document.getElementById('hrs').innerHTML=hrs
+if(min<10)
+    document.getElementById('min').innerHTML='0'+ min
+else
+    {document.getElementById('min').innerHTML= min}
+if(sec<10)
+    {document.getElementById('sec').innerHTML='0' + sec}
+else
+    {document.getElementById('sec').innerHTML=sec}
+}
+setInterval(displayTime, 10);
+
+    </script>
+</body>
+</html>

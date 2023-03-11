@@ -1,0 +1,304 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance</title>
+  <link rel="stylesheet" href="{% static 'assets/css/attendance.css' %}">
+  <link rel="stylesheet" href="{%static 'assets/Css/Navbar.css'%}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+</head>
+
+<body>
+    {% include 'Nav_Sidebar.html' %}
+  <main>
+    <div class="toolbar">
+      <div class="toggle">
+        <div class="toggle__option active">month</div>
+      </div>
+      <div class="current-month"><i class="bi bi-caret-left-fill arrow-icon"></i>June 2023<i
+          class="bi bi-caret-right-fill arrow-icon"></i>
+      </div>
+      <div class="schedule-time">
+        <div class="question_atten"><i class="bi bi-calendar-week-fill date-icon"></i>Your Schedule Today:</div>
+        <div class="answer_atten"><i class="bi bi-hourglass date-icon"></i>8:00 AM to 4:00 PM</div>
+      </div>
+    </div>
+    <div class="calendar">
+      <div class="calendar__header">
+        <div>mon</div>
+        <div>tue</div>
+        <div>wed</div>
+        <div>thu</div>
+        <div>fri</div>
+        <div>sat</div>
+        <div>sun</div>
+      </div>
+      <div class="calendar__week">
+        <div class="calendar__day day">
+          <div class="date">
+            1
+          </div>
+          <div class="atten-status p">Present</div>
+          <div class="atten-remarks"></div>
+        </div>
+        <div class="calendar__day day">
+          <div class="date">
+            2
+          </div>
+          <div class="atten-status a">Absent</div>
+          <div class="atten-remarks"></div>
+        </div>
+        <div class="calendar__day day">
+          <div class="date">
+            3
+          </div>
+          <div class="atten-status p">Present</div>
+          <div class="atten-remarks"></div>
+        </div>
+        <div class="calendar__day day">
+          <div class="date">
+            4
+          </div>
+          <div class="atten-status p">Present</div>
+          <div class="atten-remarks"></div>
+        </div>
+        <div class="calendar__day day">
+          <div class="date">
+            5
+          </div>
+          <div class="atten-status p">Present</div>
+          <div class="atten-remarks"></div>
+        </div>
+        <div class="calendar__day day">
+          <div class="date">
+            6
+          </div>
+          <div class="atten-status p">Present</div>
+          <div class="atten-remarks"></div>
+        </div>
+        <div class="calendar__day day">
+          <div class="date">
+            7
+          </div>
+          <div class="atten-status l">Late</div>
+          <div class="atten-remarks"></div>
+        </div>
+      </div>
+
+      <div class="calendar__week">
+        <div class="calendar__day day">
+          <div class="date">
+            8
+          </div>
+          <div class="atten-status p">Present</div>
+          <div class="atten-remarks"></div>
+        </div>
+        <div class="calendar__day day">
+          <div class="date">
+            9
+          </div>
+          <div class="atten-status p">Present</div>
+          <div class="atten-remarks"></div>
+        </div>
+        <div class="calendar__day day">
+          <div class="date">
+            10
+          </div>
+          <div class="atten-status p">Present</div>
+          <div class="atten-remarks"></div>
+        </div>
+        <div class="calendar__day day">
+          <div class="date">
+            11
+          </div>
+          <div class="atten-status p">Present</div>
+          <div class="atten-remarks"></div>
+        </div>
+        <div class="calendar__day day">
+          <div class="date">
+            12
+          </div>
+          <div class="atten-status p">Present</div>
+          <div class="atten-remarks"></div>
+        </div>
+        <div class="calendar__day day">
+          <div class="date">
+            13
+          </div>
+          <div class="atten-status p">Present</div>
+          <div class="atten-remarks"></div>
+        </div>
+        <div class="calendar__day day">
+          <div class="date">
+            14
+          </div>
+          <div class="atten-status p">Present</div>
+          <div class="atten-remarks"></div>
+        </div>
+      </div>
+      
+      <div class="calendar__week">
+        <div class="calendar__day day">
+          <div class="date">
+            15
+          </div>
+          <div class="atten-status p">Present</div>
+          <div class="atten-remarks"></div>
+        </div>
+        <div class="calendar__day day">
+          <div class="date">
+            16
+          </div>
+          <div class="atten-status l">Late</div>
+          <div class="atten-remarks"></div>
+        </div>
+        <div class="calendar__day day">
+          <div class="date">
+            17
+          </div>
+          <div class="atten-status p">Present</div>
+          <div class="atten-remarks"></div>
+        </div>
+        <div class="calendar__day day">
+          <div class="date">
+            18
+          </div>
+          <div class="atten-status p">Present</div>
+          <div class="atten-remarks"></div>
+        </div>
+        <div class="calendar__day day">
+          <div class="date">
+            19
+          </div>
+          <div class="atten-status p">Present</div>
+          <div class="atten-remarks"></div>
+        </div>
+        <div class="calendar__day day">
+          <div class="date">
+            20
+          </div>
+          <div class="atten-status p">Present</div>
+          <div class="atten-remarks"></div>
+        </div>
+        <div class="calendar__day day">
+          <div class="date">
+            21
+          </div>
+          <div class="atten-status l">Late</div>
+          <div class="atten-remarks"></div>
+        </div>
+      </div>
+      
+      <div class="calendar__week">
+        <div class="calendar__day day">
+          <div class="date">
+            22
+          </div>
+          <div class="atten-status p">Present</div>
+          <div class="atten-remarks"></div>
+        </div>
+        <div class="calendar__day day">
+          <div class="date">
+            23
+          </div>
+          <div class="atten-status p">Present</div>
+          <div class="atten-remarks"></div>
+        </div>
+        <div class="calendar__day day">
+          <div class="date">
+            24
+          </div>
+          <div class="atten-status p">Present</div>
+          <div class="atten-remarks"></div>
+        </div>
+        <div class="calendar__day day">
+          <div class="date">
+            25
+          </div>
+          <div class="atten-status p">Present</div>
+          <div class="atten-remarks"></div>
+        </div>
+        <div class="calendar__day day">
+          <div class="date">
+            26
+          </div>
+          <div class="atten-status p">Present</div>
+          <div class="atten-remarks"></div>
+        </div>
+        <div class="calendar__day day">
+          <div class="date">
+            27
+          </div>
+          <div class="atten-status l">Late</div>
+          <div class="atten-remarks"></div>
+        </div>
+        <div class="calendar__day day">
+          <div class="date">
+            28
+          </div>
+          <div class="atten-status p">Present</div>
+          <div class="atten-remarks"></div>
+        </div>
+      </div>
+      
+      <div class="calendar__week">
+        <div class="calendar__day day">
+          <div class="date">
+            29
+          </div>
+          <div class="atten-status p">Present</div>
+          <div class="atten-remarks"></div>
+        </div>
+        <div class="calendar__day day">
+          <div class="date">
+            30
+          </div>
+          <div class="atten-status a">Absent</div>
+          <div class="atten-remarks"></div>
+        </div>
+        <div class="calendar__day day">
+          <div class="date">
+            31
+          </div>
+          <div class="atten-status l"></div>
+          <div class="atten-remarks"></div>
+        </div>
+        <div class="calendar__day day">
+          <div class="date">
+            1
+          </div>
+          <div class="atten-status l"></div>
+          <div class="atten-remarks"></div>
+        </div>
+        <div class="calendar__day day">
+          <div class="date">
+            2
+          </div>
+          <div class="atten-status l"></div>
+          <div class="atten-remarks"></div>
+        </div>
+        <div class="calendar__day day">
+          <div class="date">
+            3
+          </div>
+          <div class="atten-status l"></div>
+          <div class="atten-remarks"></div>
+        </div>
+        <div class="calendar__day day">
+          <div class="date">
+            4
+          </div>
+          <div class="atten-status l"></div>
+          <div class="atten-remarks"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</body>
+
+</html>

@@ -13,7 +13,7 @@
     
     <style>
         .fc-day-grid-event {
-          height: 50px; /* set the height of each box to 50 pixels */
+          height: 20px; /* set the height of each box to 50 pixels */
           
         }
 
@@ -51,6 +51,11 @@
         var calendar = new FullCalendar.Calendar(calendarEl, {
           initialView: 'dayGridMonth',
           events: '{{ events }}',
+          eventRender: function(info) {
+            if (info.event.extendedProps.className == 'attendance') {
+              info.el.classList.add('fc-attendance-event');
+            }
+          }
         });
         calendar.render();
       });

@@ -9,30 +9,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.js"></script>
     {% comment %} <link rel="stylesheet" href="{%static 'assets/css/calendar.css'%}"> {% endcomment %}
-
+    <link rel="stylesheet" href="{%static 'assets/Css/calendar.css'%}">
     
-    <style>
-        .fc-day-grid-event {
-          height: 20px; /* set the height of each box to 50 pixels */
-          
-        }
-
-        #calendar {
-            margin-left: 200px;
-            z-index:200;
-            position: relative;
-            top: 9%;
-            right:3%%
-            width: 100%;
-            height: 93%;
-          }
-
-        .fc-week {
-            height: calc(100% / 5); /* set the height of each week to 20% */
-        }
-        
-  
-      </style>
+    
     
 </head>
 <body>
@@ -48,16 +27,43 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-          initialView: 'dayGridMonth',
-          events: '{{ events }}',
-          eventRender: function(info) {
-            if (info.event.extendedProps.className == 'attendance') {
-              info.el.classList.add('fc-attendance-event');
-            }
-          }
-        });
-        calendar.render();
+var calendar = new FullCalendar.Calendar(calendarEl, {
+  initialView: 'dayGridMonth',
+  events: '{{ events }}',
+  eventClassNames: function({ event, isPast }) {
+    let classNames = [];
+
+    if (event.extendedProps.className === 'attendance') {
+      classNames.push('fc-attendance-event');
+
+      switch (event.extendedProps.status) {
+        case 'present':
+          classNames.push('fc-attendance-present');
+          break;
+        case 'late':
+          classNames.push('fc-attendance-late');
+          break;
+        case 'leave':
+          classNames.push('fc-attendance-leave');
+          break;
+        case 'absent':
+          classNames.push('fc-attendance-absent');
+          break;
+        default:
+          break;
+      }
+    }
+
+    if (isPast) {
+      classNames.push('fc-past-event');
+    }
+
+    return classNames;
+  }
+});
+
+calendar.render();
+
       });
     var events = '{{ events|safe }}';
    $(document).ready(function () {
@@ -68,8 +74,8 @@
             
         },
         events: JSON.parse(events),
-        selectable: true,
-        selectHelper: true,
+        selectable: false,
+        
         
         eventLimit: true,
         contentHeight: 600,
@@ -81,87 +87,7 @@
                 end: moment(currentDate).startOf('month').add(4, 'weeks').endOf('week')
             };
         },})})
-           /*select: function (start, end, allDay) {
-               var title = prompt("Enter Event Title");
-               if (title) {
-                   var start = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm:ss");
-                   var end = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
-                   $.ajax({
-                       type: "GET",
-                       url: '/add_event',
-                       data: {'title': title, 'start': start, 'end': end},
-                       dataType: "json",
-                       success: function (data) {
-                           calendar.fullCalendar('refetchEvents');
-                           alert("Added Successfully");
-                       },
-                       error: function (data) {
-                           alert('There is a problem!!!');
-                       }
-                   });
-               }
-           },
-           eventResize: function (event) {
-               var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
-               var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
-               var title = event.title;
-               var id = event.id;
-               $.ajax({
-                   type: "GET",
-                   url: '/update',
-                   data: {'title': title, 'start': start, 'end': end, 'id': id},
-                   dataType: "json",
-                   success: function (data) {
-                       calendar.fullCalendar('refetchEvents');
-                       alert('Event Update');
-                   },
-                   error: function (data) {
-                       alert('There is a problem!!!');
-                   }
-               });
-           },
- 
-           eventDrop: function (event) {
-               var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
-               var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
-               var title = event.title;
-               var id = event.id;
-               $.ajax({
-                   type: "GET",
-                   url: '/update',
-                   data: {'title': title, 'start': start, 'end': end, 'id': id},
-                   dataType: "json",
-                   success: function (data) {
-                       calendar.fullCalendar('refetchEvents');
-                       alert('Event Update');
-                   },
-                   error: function (data) {
-                       alert('There is a problem!!!');
-                   }
-               });
-           },
- 
-           eventClick: function (event) {
-               if (confirm("Are you sure you want to remove it?")) {
-                   var id = event.id;
-                   $.ajax({
-                       type: "GET",
-                       url: '/remove',
-                       data: {'id': id},
-                       dataType: "json",
-                       success: function (data) {
-                           calendar.fullCalendar('refetchEvents');
-                           alert('Event Removed');
-                       },
-                       error: function (data) {
-                           alert('There is a problem!!!');
-                       }
-                   });
-               }
-           },
- 
-       });
-   });*/
+           
  
 </script>
 </body>

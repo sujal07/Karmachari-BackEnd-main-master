@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+:root {
+    /* ==================MAIN COLORS==================*/
+    --hue-color: 207;
+    /* --color-mer:hsl(207, 75%, 50%); */
+    /*Purple 250 - Green 142 - Blue 230 - Pink 340 sky blue: 205*/
+    --primary-color: hsl(var(--hue-color), 75%, 50%);
+    --primary-color-alt: hsl(var(--hue-color), 100%, 90%);
+    --primary-color-sec: hsl(var(--hue-color), 69%, 61%);
+    --dark-color: rgb(51, 51, 51);
+    --dark-color-alt: hsl(0, 0%, 36%);
+    --dark-selected: hsl(0, 0%, 20%);
+    --Checkin: hsl(120, 50%, 50%);
+    --Checkin-hover: hsl(120, 50%, 30%);
+    --checkout: hsl(0, 100%, 70%);
+    /* =====================TEXTS ======================*/
+    --text-dark-color: #333;
+    --text-dark-color-alt: grey;
+    --text-light-color: whitesmoke;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: "poppins", sans-serif;
+}
+
+body {
+    height: calc(100vh-3px);
+    font-weight: 100;
+}
+
+main {
+    padding: 48px;
+    position: absolute;
+    left: 15%;
+    top: 7%;
+    width: 85%;
+    height: 93%;
+    overflow: hidden;
+}
+
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    height: 15%;
+    width: 99%;
+}
+.fc-day-grid-event {
+    width: 95%;
+    height: 30%;
+    display: flex;
+    justify-content: flex-start;
+    color: var(--text-light-color);
+    align-items: center;
+    padding: 0 1rem;
+    border-radius:12px;
+    
+  }
+  .fc-attendance-present{
+      background:var(--Checkin)!important;
+  }
+  .fc-attendance-late{
+      background:#eab676!important;
+  }
+  .fc-attendance-absent{
+    background:var(--checkout)!important;
+}
+  #calendar {
+      margin-left: 200px;
+      z-index:200;
+      position: relative;
+      top: 12%;
+      right:5%;
+      width: 96%;
+      height: 93%;
+    }
+
+  .fc-week {
+      height: calc(100% / 5); /* set the height of each week to 20% */
+  }
+  

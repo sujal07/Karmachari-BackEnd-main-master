@@ -1,17 +1,15 @@
 from django.core.management.base import BaseCommand
-from datetime import datetime
 from django.utils import timezone
+from datetime import datetime
 from mainapp.models import Attendance, User
 import schedule
 import calendar
 from datetime import date, timedelta
-from mainapp.views import mark_saturdays_as_leave,mark_absent
+
 
 class Command(BaseCommand):
     help = 'Marks users as absent if they did not check in/out'
-
     def handle(self, *args, **options):
-        
         def mark_absent():
             # Get all users
             users = User.objects.all()
@@ -23,8 +21,9 @@ class Command(BaseCommand):
                 attendance_exists = Attendance.objects.filter(user=user, dateOfQuestion=today).exists()
                 if not attendance_exists:
                     # If no attendance record exists, create a new one with a status of 'Absent'
-                    attendance = Attendance(user=user, dateOfQuestion=today, status='Absent')
+                    attendance = Attendance(user=user, dateOfQuestion=today, status='Absent',checkInTime=datetime.now(),checkOutTime=datetime.now())
                     attendance.save()
+                    print('saved')
                     
         def mark_saturdays_as_leave(year, month):
             # Get the first and last day of the month
@@ -36,15 +35,15 @@ class Command(BaseCommand):
                 date = timezone.datetime(year, month, day).date()
                 if date.weekday() == 5:  # Saturday is the 5th day of the week
                     for user in User.objects.all():
-                        attendance, _ = Attendance.objects.get_or_create(user=user, dateOfQuestion=date,checkInTime=datetime.now(),checkOutTime=datetime.now())
+                        attendance, _ = Attendance.objects.get_or_create(user=user, dateOfQuestion=date)
                         attendance.status = 'Leave'
                         attendance.save()
 
         # Schedule the function to run at the end of the day
-        schedule.every().day.at('00:14').do(mark_absent)
+        schedule.every().day.at('01:46').do(mark_absent)
 
         # Schedule the function to run at the end of each month
-        schedule.every().month.do(lambda: mark_saturdays_as_leave(timezone.now().year, timezone.now().month))
+        schedule.every(calendar.monthrange(timezone.now().year, timezone.now().month)[1]).days.do(lambda: mark_saturdays_as_leave(timezone.now().year, timezone.now().month))
 
         # Run the schedule loop
         while True:

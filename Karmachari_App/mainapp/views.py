@@ -206,35 +206,35 @@ def salary(request):
     return render(request,'Salary_Sheet.html',context)
 
 
-def mark_absent():
-        # Get all users
-        users = User.objects.all()
-        # Get today's date
-        today = timezone.now().date()
-        # Loop through each user
-        for user in users:
-            # Check if the user has a check-in/out record for today
-            attendance_exists = Attendance.objects.filter(user=user, dateOfQuestion=today).exists()
-            if not attendance_exists:
-                # If no attendance record exists, create a new one with a status of 'Absent'
-                attendance = Attendance(user=user, dateOfQuestion=today, status='Absent')
-                attendance.save()
+# def mark_absent():
+#         # Get all users
+#         users = User.objects.all()
+#         # Get today's date
+#         today = timezone.now().date()
+#         # Loop through each user
+#         for user in users:
+#             # Check if the user has a check-in/out record for today
+#             attendance_exists = Attendance.objects.filter(user=user, dateOfQuestion=today).exists()
+#             if not attendance_exists:
+#                 # If no attendance record exists, create a new one with a status of 'Absent'
+#                 attendance = Attendance(user=user, dateOfQuestion=today, status='Absent')
+#                 attendance.save()
                 
-def mark_saturdays_as_leave(year, month):
-    user=User.objects.all()
-    # Get the first and last day of the month
-    first_day = date(year, month, 1)
-    last_day = date(year, month, 28) + timedelta(days=4)
+# def mark_saturdays_as_leave(year, month):
+#     user=User.objects.all()
+#     # Get the first and last day of the month
+#     first_day = date(year, month, 1)
+#     last_day = date(year, month, 28) + timedelta(days=4)
 
-    # Loop through each Saturday in the month and mark it as Leave
-    d = first_day
-    while d <= last_day:
-        if d.weekday() == 5:
-            Attendance.objects.update_or_create(
-                user=user,
-                dateOfQuestion=d,
-                defaults={
-                    'status': 'Leave'
-                }
-            )
-        d += timedelta(days=1)
+#     # Loop through each Saturday in the month and mark it as Leave
+#     d = first_day
+#     while d <= last_day:
+#         if d.weekday() == 5:
+#             Attendance.objects.update_or_create(
+#                 user=user,
+#                 dateOfQuestion=d,
+#                 defaults={
+#                     'status': 'Leave'
+#                 }
+#             )
+#         d += timedelta(days=1)

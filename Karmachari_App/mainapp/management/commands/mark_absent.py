@@ -1,5 +1,4 @@
 from django.core.management.base import BaseCommand
-from datetime import datetime
 from django.utils import timezone
 from mainapp.models import Attendance, User
 import schedule
@@ -25,6 +24,7 @@ class Command(BaseCommand):
                     # If no attendance record exists, create a new one with a status of 'Absent'
                     attendance = Attendance(user=user, dateOfQuestion=today, status='Absent')
                     attendance.save()
+
                     
         def mark_saturdays_as_leave(year, month):
             # Get the first and last day of the month
@@ -36,7 +36,7 @@ class Command(BaseCommand):
                 date = timezone.datetime(year, month, day).date()
                 if date.weekday() == 5:  # Saturday is the 5th day of the week
                     for user in User.objects.all():
-                        attendance, _ = Attendance.objects.get_or_create(user=user, dateOfQuestion=date,checkInTime=datetime.now(),checkOutTime=datetime.now())
+                        attendance, _ = Attendance.objects.get_or_create(user=user, dateOfQuestion=date)
                         attendance.status = 'Leave'
                         attendance.save()
 

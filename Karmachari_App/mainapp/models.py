@@ -149,7 +149,7 @@ class Attendance(models.Model):
             duration = self.checkOutTime - self.checkInTime
             return duration.total_seconds() / 3600 # Convert to hours
         else:
-            return 0
+            return 0.0
         
     def calculate_duration_hms(self):
         if self.checkOutTime:

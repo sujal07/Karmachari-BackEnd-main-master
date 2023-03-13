@@ -55,5 +55,5 @@ class Command(BaseCommand):
         mark_saturdays_as_leave(timezone.now().year, timezone.now().month)
         # Run the schedule loop
         while True:
-            mark_absent()
+            # mark_absent()
             schedule.run_pending()

@@ -24,16 +24,27 @@ def index(request):
 
 @login_required(login_url='login')
 def home(request):
-    fullname =  request.user.get_full_name()
-    profile=Profile.objects.get(user=request.user)
-    context = {'fullname':fullname,
-               'profile':profile,
-               'navbar':'home',
-               }
-    return render(request,'Home.html',context)
+    user = request.user
+    fullname = request.user.get_full_name()
+    profile = Profile.objects.get(user=request.user)
+    today = timezone.now().date()
+    attendance = Attendance.objects.filter(user=user, dateOfQuestion=today).first()
+    if attendance:
+        hours, minutes, seconds = attendance.calculate_duration_hms()
+    else:
+        hours, minutes, seconds = 00, 00, 00
+    context = {
+        'fullname': fullname,
+        'profile': profile,
+        'navbar': 'home',
+        'attendance': attendance,
+        'hours': hours,
+        'minutes': minutes,
+        'seconds': seconds,
+    }
+    return render(request, 'home.html', context)
 
 
-    
 #login request gets value from action of html.login/form
 def login(request):
     
@@ -167,6 +178,7 @@ def checkout(request):
         return JsonResponse({'out_time': checkOutTime, 'duration': duration})
     response = {'message': 'Success'}
     return JsonResponse(response)
+
 
 
 

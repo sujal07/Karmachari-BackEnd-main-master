@@ -32,6 +32,11 @@ def calendar(request):
     all_events = Events.objects.filter(user=user)
     profile = Profile.objects.get(user=request.user)
     events = []
+    user_agent = request.META['HTTP_USER_AGENT']
+    if 'Mobile' in user_agent:
+        width=450  
+    else:
+        width=600
     for event in all_events:
         events.append({
             'title': event.event_status,                                                                                         
@@ -72,6 +77,7 @@ def calendar(request):
     context = {
         'events': json.dumps(events),
         'profile':profile,
+        'width':width,
         'navbar':'attendance',
     }
     return render(request, 'calendar.html', context)

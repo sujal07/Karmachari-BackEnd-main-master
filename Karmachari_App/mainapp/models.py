@@ -139,9 +139,20 @@ class Attendance(models.Model):
     def calculate_duration(self):
         if self.checkOutTime:
             duration = self.checkOutTime - self.checkInTime
-            return duration.total_seconds() / 3600.0  # Convert to hours
+            return duration.total_seconds() / 3600 # Convert to hours
         else:
             return 0
+        
+    def calculate_duration_hms(self):
+        if self.checkOutTime:
+            duration = self.checkOutTime - self.checkInTime
+            seconds = int(duration.total_seconds())
+            hours = seconds // 3600
+            minutes = (seconds % 3600) // 60
+            seconds = seconds % 60
+            return hours, minutes, seconds
+        else:
+            return 0, 0, 0
 
 class Events(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE,null=True)
@@ -153,23 +164,6 @@ class Events(models.Model):
     class Meta:  
         db_table = "tblevents"
 
-    # def save(self, *args, **kwargs):
-    #     # Get all Events objects for the same user and date
-    #     same_day_events = Events.objects.filter(user=self.user, start__date=self.start.date())
 
-    #     # Check if any of the event_status values are Leave, Present, Absent, or Late
-    #     status_values = [event.event_status for event in same_day_events]
-    #     forbidden_statuses = ['Leave', 'Present', 'Absent', 'Late']
-    #     if any(status in forbidden_statuses for status in status_values):
-    #         # Raise a validation error if the new event_status is one of the forbidden statuses
-    #         if self.event_status in forbidden_statuses:
-    #             raise ValidationError(f"Cannot set event_status to {self.event_status} because there is already an event with one of the following statuses: {', '.join(forbidden_statuses)}")
-    #         else:
-    #             # Override the old event_status with the new one
-    #             old_event = same_day_events.first()
-    #             old_event.event_status = self.event_status
-    #             old_event.save()
-    #     else:
-    #         super().save(*args, **kwargs)
         
         

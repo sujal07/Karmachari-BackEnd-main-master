@@ -1,29 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
-
-:root {
-    /* ==================MAIN COLORS==================*/
-    --hue-color: 207;
-    /* --color-mer:hsl(207, 75%, 50%); */
-    /*Purple 250 - Green 142 - Blue 230 - Pink 340 sky blue: 205*/
-    --primary-color: hsl(var(--hue-color), 75%, 50%);
-    --primary-color-alt: hsl(var(--hue-color), 100%, 90%);
-    --primary-color-sec: hsl(var(--hue-color), 69%, 61%);
-    --dark-color: rgb(51, 51, 51);
-    --dark-color-alt: hsl(0, 0%, 36%);
-    --dark-selected: hsl(0, 0%, 20%);
-    --Checkin: hsl(120, 50%, 50%);
-    --Checkin-hover: hsl(120, 50%, 30%);
-    --checkout: hsl(0, 100%, 70%);
-    /* =====================TEXTS ======================*/
-    --text-dark-color: #333;
-    --text-dark-color-alt: grey;
-    --text-light-color: whitesmoke;
-}
-
-* {
-    box-sizing: border-box;
-    font-family: "poppins", sans-serif;
-}
 
 body {
     height: calc(100vh-3px);
@@ -31,7 +5,6 @@ body {
 }
 
 main {
-    padding: 48px;
     position: absolute;
     left: 15%;
     top: 7%;
@@ -48,7 +21,7 @@ main {
     width: 99%;
 }
 .fc-day-grid-event {
-    width: 95%;
+    width: 80%;
     height: 30%;
     display: flex;
     justify-content: flex-start;
@@ -61,19 +34,41 @@ main {
   .fc-attendance-present{
       background:var(--Checkin)!important;
   }
+  .fc-today-button
+  {
+    box-shadow: 1px 2px 30px -5px var(--primary-color)!important;
+  }
   .fc-attendance-late{
       background:#eab676!important;
   }
   .fc-attendance-absent{
     background:var(--checkout)!important;
 }
+.fc-day-number
+{
+    padding:.3rem .3rem 0 0!important;
+}
 .fc-attendance-leave{
     background:gray!important;
 }
-
+.fc-icon
+{
+    color:var(--primary-color)!important;
+}
+.fc-left
+{
+    display: none;
+}
+.fc-today
+{
+    background-color: var(--primary-color-alt)!important;
+}
+.fc-toolbar h2{
+    transform: translateX(6rem);
+}
   #calendar {
-      margin-left: 200px;
-      z-index:200;
+      left: 11%;
+      z-index:2;
       position: relative;
       top: 12%;
       right:5%;
@@ -84,4 +79,38 @@ main {
   .fc-week {
       height: calc(100% / 5); /* set the height of each week to 20% */
   }
-  
+
+
+@media screen and (max-width:900px) {
+.main{
+    left: 0;
+    height: 100%;
+    width: 100%;
+}    
+.fc-title, .fc-time
+{
+    display: none!important;
+}
+.fc-content
+{
+    min-height: 10px;
+    border-radius: 50%;
+}
+#calendar
+{
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+.fc-today-button
+{
+    display: none;
+}
+.fc-toolbar
+{
+    padding-top: 1.5rem;
+}
+.fc-toolbar h2{
+    transform: translateX(1rem);
+    }
+}

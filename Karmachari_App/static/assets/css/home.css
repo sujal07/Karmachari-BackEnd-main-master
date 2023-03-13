@@ -212,7 +212,16 @@ h3 {
     padding: 0 2%;
     row-gap: 0rem;
 }
+.works p
+{
+    overflow: visible;
+    margin: 0;
+}
+.works .work-time{
 
+    overflow: visible;
+    height: 20px;
+}
 .atten-status {
     grid-column-start: 1;
     grid-column-end: 3;

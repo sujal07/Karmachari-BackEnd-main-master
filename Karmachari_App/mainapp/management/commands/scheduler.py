@@ -47,7 +47,7 @@ class Command(BaseCommand):
                         print('saturday')
 
         # Schedule the function to run at the end of the day
-        schedule.every().day.at('01:46').do(mark_absent)
+        schedule.every().day.at('23:59').do(mark_absent)
 
         # Schedule the function to run at the end of each month
         schedule.every(calendar.monthrange(timezone.now().year, timezone.now().month)[1]).days.do(lambda: mark_saturdays_as_leave(timezone.now().year, timezone.now().month))
@@ -55,4 +55,5 @@ class Command(BaseCommand):
         mark_saturdays_as_leave(timezone.now().year, timezone.now().month)
         # Run the schedule loop
         while True:
+            mark_absent()
             schedule.run_pending()

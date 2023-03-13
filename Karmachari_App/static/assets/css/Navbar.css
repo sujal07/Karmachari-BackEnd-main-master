@@ -215,6 +215,8 @@ p.time-data {
 }
 .bell-notification
 {
+    overflow: visible;
+
     height: 0;
 }
 .bell-notification::after

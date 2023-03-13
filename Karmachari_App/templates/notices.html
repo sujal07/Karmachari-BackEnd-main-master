@@ -51,7 +51,7 @@
                                     <td>{{forloop.counter}}</td>
                                     <td>{{notice.title}}</td>
                                     <td>{{notice.created_at}}</td>
-                                    <td>{{notice.department}}</td>
+                                    <td class="Notice_Bio">{{notice.context|truncatewords:20}}</td>
                                     <td>{{notice.context|truncatewords:20}}</td>
                                 </a>
                             </tr>

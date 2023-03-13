@@ -105,6 +105,7 @@ def checkin(request):
         user = request.user
         dateOfQuestion = datetime.today()
         checkInTime = timezone.now()
+        print(checkInTime)
         Attendance.objects.create(user=user, checkInTime=checkInTime,dateOfQuestion=dateOfQuestion)
         return JsonResponse({'in_time': checkInTime})
     response = {'message': 'Success'}
@@ -117,7 +118,7 @@ def checkout(request):
         
         print("CHECK OUT") 
         user = request.user
-        checkOutTime = timezone.now()
+        checkOutTime =timezone.now()
         current_attendance = Attendance.objects.filter(user=user).latest('checkInTime')
         current_attendance.checkOutTime = checkOutTime
         current_attendance.save()
@@ -130,18 +131,21 @@ def checkout(request):
         late_time = datetime.combine(date.today(), schedule.schedule_start) + timedelta(minutes=15)
         late_time = late_time.time()
         attendance_date = date.today()
+    
 
 
         # Determine the status based on the schedule and check-in time
         if current_attendance.checkInTime.time() < late_time:
             status = 'Present'  # Late
-            print(late_time)
         else:
             status = 'Late'  # Presents
     try:
         attendance = Attendance.objects.filter(user=user, dateOfQuestion=attendance_date).latest('checkInTime')
     except Attendance.DoesNotExist:
         attendance = None
+    print('checkInTime:', current_attendance.checkInTime)
+    print('late_time:', late_time)
+    print('status:', status)
 
     # If an attendance object already exists, update its checkOutTime, duration, and status
     if attendance is not None:

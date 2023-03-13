@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from mainapp.models import Events,Profile
 from mainapp.models import Attendance
 import json
+from django.utils import timezone
 from datetime import datetime
  
 # Create your views here.
@@ -39,13 +40,14 @@ def calendar(request):
             'end': event.end.strftime("%m/%d/%Y, %H:%M:%S"),
         })
     all_attendance = Attendance.objects.filter(user=user)
+    default_time=timezone.now()
     for attendance in all_attendance:
         if attendance.checkInTime is not None and attendance.checkOutTime is not None:
             start = attendance.checkInTime.strftime("%m/%d/%Y, %H:%M:%S")
             end = attendance.checkOutTime.strftime("%m/%d/%Y, %H:%M:%S")
         else:
-            start = datetime.now()
-            end = datetime.now()
+            start = attendance.checkInTime.strftime("%m/%d/%Y, %H:%M:%S")
+            end = None
         if attendance.status == 'Present':
             className = 'fc-attendance-present'
         elif attendance.status == 'Late':

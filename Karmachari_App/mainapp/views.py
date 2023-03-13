@@ -114,6 +114,7 @@ def checkin(request):
 def checkout(request):
     # if request.is_ajax():
     if request.method == 'POST':
+        
         print("CHECK OUT") 
         user = request.user
         checkOutTime = timezone.now()
@@ -132,10 +133,11 @@ def checkout(request):
 
 
         # Determine the status based on the schedule and check-in time
-        if current_attendance.checkInTime.time() > late_time:
-            status = 'Late'  # Late
+        if current_attendance.checkInTime.time() < late_time:
+            status = 'Present'  # Late
+            print(late_time)
         else:
-            status = 'Present'  # Presents
+            status = 'Late'  # Presents
     try:
         attendance = Attendance.objects.filter(user=user, dateOfQuestion=attendance_date).latest('checkInTime')
     except Attendance.DoesNotExist:

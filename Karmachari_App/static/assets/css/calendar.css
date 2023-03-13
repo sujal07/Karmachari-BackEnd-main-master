@@ -67,6 +67,10 @@ main {
   .fc-attendance-absent{
     background:var(--checkout)!important;
 }
+.fc-attendance-leave{
+    background:gray!important;
+}
+
   #calendar {
       margin-left: 200px;
       z-index:200;

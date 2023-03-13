@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import *
+from .forms import *
 from django.urls import reverse
 from django.utils.html import format_html
 from django.urls import path
@@ -51,6 +52,14 @@ class AttendanceAdmin(admin.ModelAdmin):
             return queryset.filter(Q(name=search_term) | Q(user=user)), True
         except User.DoesNotExist:
             return queryset.filter(name=search_term), True
+        
+class PayrollAdmin(admin.ModelAdmin):
+    # form = PayrollForm
+    fields = ('user','basic_pay', 'overtime', 'deductions')
+    readonly_fields = ['net_pay']
+    list_filter = [
+        ('date', DateFilter),
+    ]
     
     
     
@@ -60,7 +69,7 @@ admin.site.register(Notice,NoticeAdmin)
 admin.site.register(Department)
 admin.site.register(Leaves,LeavesAdmin)
 admin.site.register(Events)
-admin.site.register(Payroll)
+admin.site.register(Payroll,PayrollAdmin)
 admin.site.register(AllowedIP)
 admin.site.register(Salary)
 admin.site.register(Schedule,ScheduleAdmin)

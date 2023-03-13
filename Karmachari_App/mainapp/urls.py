@@ -16,7 +16,9 @@ urlpatterns = [
     path('leaves',views.leaves, name='leaves'),
     path('checkin',views.checkin,name='checkin'),
     path('checkout',views.checkout,name='checkout'),
-    path('salary',views.salary,name='salary'),
+    path('salary',views.payroll,name='payroll'),
+    path('view_pdf/<str:pk>', views.view_pdf,name='view_pdf'),
+    path('download_pdf/<str:pk>',views.download_pdf,name='download_pdf'),
     # path('mark_absent/', mark_absent.Command().handle, name='mark_absent'),
     
     # path('mark_saturdays_as_leave/', mark_absent.Command().handle, name='mark_saturdays_as_leave'),

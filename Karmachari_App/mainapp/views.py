@@ -203,56 +203,69 @@ def leaves(request):
         form=LeavesForm()
         if 'submitted in request.GET':
             submitted=True
-            context={
-            'profile':profile,
-            # 'navbar':'leaves',
-            'form': form,
-            'submitted':submitted,
-            'leaves':leaves,
+    context={
+        'profile':profile,
+        'navbar':'leaves',
+        'form': form,
+        'submitted':submitted,
+        'leaves':leaves,
             }
-            return render(request,'leaves.html',context)
+    return render(request,'leaves.html',context)
 
 @login_required(login_url='login')
-def salary(request):
+def payroll(request):
     user_object = User.objects.get(username=request.user.username)
+    try:
+        payrolls = Payroll.objects.filter(user=user_object)
+        # payroll = Payroll.object.filter(user=user_object)
+        for payroll in payrolls:
+            if payroll is not None:
+                net_salary = payroll.calculate_net_pay()
+            payroll.net_pay = net_salary
+            payroll.save()
+    except IndexError:
+        print("No payroll object found for this user")
+    else:
+        print("Payroll object found:", payrolls)
     profile = Profile.objects.get(user=user_object)
     context={
         'profile':profile,
-        'navbar':'salary',
-        
+        'navbar':'Salary-Sheet',
+        'payrolls': payrolls,
+        'net_salary': net_salary,
     }
-    return render(request,'Salary_Sheet.html',context)
+    return render(request,'Salary_Sheet.html', context)
 
+def view_pdf(request, pk):
+    user_object = User.objects.get(username=request.user.username)
+    payroll = Payroll.objects.filter(user=user_object, id=pk)[0]
+    profile = Profile.objects.get(user=user_object)
+    user = request.user
+    fullname = request.user.get_full_name()
+    data = {
+            'fullname':fullname,
+            'payroll': payroll,
+            'user': user_object,
+            'profile': profile,
+            }
+    print(data)
+    pdf = render_to_pdf('payroll_pdf.html', data)
+    return HttpResponse(pdf, content_type='application/pdf')
 
-# def mark_absent():
-#         # Get all users
-#         users = User.objects.all()
-#         # Get today's date
-#         today = timezone.now().date()
-#         # Loop through each user
-#         for user in users:
-#             # Check if the user has a check-in/out record for today
-#             attendance_exists = Attendance.objects.filter(user=user, dateOfQuestion=today).exists()
-#             if not attendance_exists:
-#                 # If no attendance record exists, create a new one with a status of 'Absent'
-#                 attendance = Attendance(user=user, dateOfQuestion=today, status='Absent')
-#                 attendance.save()
-                
-# def mark_saturdays_as_leave(year, month):
-#     user=User.objects.all()
-#     # Get the first and last day of the month
-#     first_day = date(year, month, 1)
-#     last_day = date(year, month, 28) + timedelta(days=4)
-
-#     # Loop through each Saturday in the month and mark it as Leave
-#     d = first_day
-#     while d <= last_day:
-#         if d.weekday() == 5:
-#             Attendance.objects.update_or_create(
-#                 user=user,
-#                 dateOfQuestion=d,
-#                 defaults={
-#                     'status': 'Leave'
-#                 }
-#             )
-#         d += timedelta(days=1)
+def download_pdf(request, pk):
+    user_object = User.objects.get(username=request.user.username)
+    user = request.user
+    fullname = request.user.get_full_name()
+    payroll = Payroll.objects.filter(user=user_object, id=pk)[0]
+    profile = Profile.objects.get(user=user_object)
+    data = {
+            'fullname':fullname,
+            'payroll': payroll,
+            'user': user_object,
+            'profile': profile,
+            }
+    print(data)	
+    pdf = render_to_pdf('payroll_pdf.html', data)
+    response = HttpResponse(pdf, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="payroll.pdf"'
+    return response

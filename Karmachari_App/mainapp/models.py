@@ -95,19 +95,27 @@ class Schedule(models.Model):
     
     
 class Payroll(models.Model):
-    status =(
-        ('On Time','On Time'),
-        ('Late','Late'),
-        ('Absent','Absent'),
-    )
     user = models.ForeignKey(User,on_delete=models.CASCADE)
-    remarks = models.CharField(max_length=100, null=True, choices=status)
-    salary = models.ForeignKey(Salary, on_delete=models.CASCADE)
-    deduction = models.FloatField(null=True)
-    bonus = models.FloatField(null=True)
-    overttimeBonus = models.FloatField(null=True)
+    basic_pay = models.DecimalField(max_digits=8, default=10000, decimal_places=2)
+    overtime = models.DecimalField(max_digits=8,null=True, decimal_places=2)
+    # overtime_multiplier = models.DecimalField(max_digits=8, default= 2, decimal_places=2)
+    # hours_worked = models.DecimalField(max_digits=8,default= 10, blank=True, decimal_places=2)
+    deductions = models.DecimalField(max_digits=8,null=True, decimal_places=2)
+    net_pay = models.DecimalField(max_digits=8,default= 0, blank=True, decimal_places=2)
+    date = models.DateTimeField(default=timezone.now)
+    def calculate_net_pay(self):
+        net_pay =self.basic_pay + self.overtime - self.deductions
+        return(net_pay)
+    
+    def salary_preview(self):
+        return (self.net_pay)
+    
+    def hour_worked_preview(self):
+        return (self.hours_worked)
+    
     def __str__(self):
-        return self.user.username
+        return f"{self.user.username}'s Payroll for {self.date.strftime('%Y-%m-%d')}"
+    
     
 class AllowedIP(models.Model):
     ip_address = models.GenericIPAddressField(null=True)

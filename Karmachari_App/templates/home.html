@@ -44,23 +44,23 @@
                     <div class="boxes-content">
                         <div class="content">
                             <div class="notice-title">
-                                <h4>Breaks</h4>
+                                <h4>{{notices.0.title}}</h4>
                             </div>
-                            <div class="date">2023/01/16
+                            <div class="date">{{notices.0.created_at|date:"Y/m/d"}}
                             </div>
                         </div>
                         <div class="content meet">
                             <div class="notice-title">
-                                <h4>Meeting</h4>
+                                <h4>{{notices.1.title}}</h4>
                             </div>
-                            <div class="date">2023/01/17
+                            <div class="date">{{notices.1.created_at|date:"Y/m/d"}}
                             </div>
                         </div>
                         <div class="content holi">
                             <div class="notice-title">
-                                <h4>Holiday</h4>
+                                <h4>{{notices.2.title}}</h4>
                             </div>
-                            <div class="date">2023/01/17
+                            <div class="date">{{notices.2.created_at|date:"Y/m/d"}}
                             </div>
                         </div>
                     </div>

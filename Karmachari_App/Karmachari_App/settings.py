@@ -69,6 +69,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 
             ],
+            'builtins': ['django.template.defaultfilters'],
         },
     },
 ]

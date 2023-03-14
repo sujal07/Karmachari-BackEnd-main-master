@@ -39,9 +39,9 @@
                                 <a href="/postnotice/{{notice.id}}">
                                     <td>{{forloop.counter}}</td>
                                     <td>{{notice.title}}</td>
-                                    <td>{{notice.created_at}}</td>
+                                    <td>{{notice.created_at|date:"Y/m/d"}}</td>
                                     <td>{{notice.department}}</td>
-                                    <td class="Notice_Bio">{{notice.context|truncatewords:20}}</td>
+                                    <td class="Notice_Bio">{{notice.context}}</td>
                                 </a>
                             </tr>
                             {% endfor %}

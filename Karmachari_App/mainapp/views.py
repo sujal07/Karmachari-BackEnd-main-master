@@ -30,12 +30,14 @@ def home(request):
     fullname = request.user.get_full_name()
     profile = Profile.objects.get(user=request.user)
     today = timezone.now().date()
+    notices = Notice.objects.all()
     attendance = Attendance.objects.filter(user=user, dateOfQuestion=today).first()
     if attendance:
         hours, minutes, seconds = attendance.calculate_duration_hms()
     else:
         hours, minutes, seconds = 00, 00, 00
     context = {
+        'notices':notices,
         'fullname': fullname,
         'profile': profile,
         'navbar': 'home',
@@ -43,6 +45,7 @@ def home(request):
         'hours': hours,
         'minutes': minutes,
         'seconds': seconds,
+        
     }
     return render(request, 'home.html', context)
 

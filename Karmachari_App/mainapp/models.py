@@ -91,7 +91,7 @@ class Payroll(models.Model):
     date = models.DateTimeField(default=timezone.now)
     
     def calculate_net_pay(self):
-        net_pay =self.basic_pay + self.overtime - self.deductions
+        net_pay =self.basic_pay + self.bonus - self.deductions
         return(net_pay)
     
     def salary_preview(self):

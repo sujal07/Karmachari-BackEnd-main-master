@@ -3,6 +3,8 @@ from django.utils import timezone
 from datetime import datetime
 from mainapp.models import Attendance, Payroll
 from django.contrib.auth.models import User
+from datetime import datetime, timedelta
+
 
 class Command(BaseCommand):
     help = 'Generates payroll for all users for a given month'
@@ -17,9 +19,14 @@ class Command(BaseCommand):
         users = User.objects.all()
 
         for user in users:
-            attendance = Attendance.objects.filter(user=user, checkInTime__month=month, checkInTime__year=year)
-            total_hours_worked = sum((a.duration.total_seconds() / 3600) for a in attendance)
-            late_count = attendance.filter(status='L').count()
+            attendance = Attendance.objects.filter(user=user, dateOfQuestion__year=year, dateOfQuestion__month=month)
+
+            if attendance:
+                total_hours_worked = sum(a.duration for a in attendance if a.duration is not None)
+            else:
+                total_hours_worked = 0
+
+            late_count = attendance.filter(status='Late').count()
             basic_pay = total_hours_worked * 130
             bonus = basic_pay * 0.1
             deductions = late_count * 25

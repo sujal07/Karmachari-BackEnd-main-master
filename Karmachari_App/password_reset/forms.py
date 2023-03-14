@@ -5,7 +5,7 @@ from django import forms
 
 
 class PasswordChangingForm(PasswordChangeForm):
-    old_password=forms.CharField(widget=forms.PasswordInput(attrs={'class':'Answer_pw','placeholder':'Old Password'}))
+    old_password=forms.CharField(widget=forms.PasswordInput(attrs={'class':'Answer_pw','placeholder':'Current Password'}))
     new_password1=forms.CharField(widget=forms.PasswordInput(attrs={'class':'Answer_pw','placeholder':'New Password'}))
     new_password2=forms.CharField(widget=forms.PasswordInput(attrs={'class':'Answer_pw','placeholder':'Confirm New Password'}))
     

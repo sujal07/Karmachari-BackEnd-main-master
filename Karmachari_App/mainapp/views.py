@@ -32,6 +32,12 @@ def home(request):
     today = timezone.now().date()
     notices = Notice.objects.all()
     attendance = Attendance.objects.filter(user=user, dateOfQuestion=today).first()
+    first_day, last_day = get_current_month_range()
+    attendances=Attendance.objects.filter(user=user, dateOfQuestion__range=(first_day, last_day))
+    present_count = attendances.filter(status='Present').count()
+    late_count = attendances.filter(status='Late').count()
+    absent_count = attendances.filter(status='Absent').count()
+    
     if attendance:
         hours, minutes, seconds = attendance.calculate_duration_hms()
     else:
@@ -45,6 +51,9 @@ def home(request):
         'hours': hours,
         'minutes': minutes,
         'seconds': seconds,
+        'present_count':present_count,
+        'late_count':late_count,
+        'absent_count':absent_count,
         
     }
     return render(request, 'home.html', context)
@@ -75,15 +84,32 @@ def logout(request):
     auth.logout(request)
     return redirect('login')
 
-@login_required(login_url='login')
+def get_current_month_range():
+    today = timezone.now().date()
+    first_day = date(today.year, today.month, 1)
+    last_day = date(today.year, today.month, 28)  # Assuming all months have 28 days
+    while last_day.month == today.month:
+        last_day = last_day + timedelta(days=1)
+    last_day = last_day - timedelta(days=1)
+    return first_day, last_day
+
+@login_required
 def information(request):
-      profile=Profile.objects.get(user=request.user)
-      context={
-      'profile':profile,
-      'navbar':'yourinformation',
-      
+    user = request.user
+    profile = Profile.objects.get(user=request.user)
+    first_day, last_day = get_current_month_range()
+    attendances = Attendance.objects.filter(user=user, dateOfQuestion__range=(first_day, last_day))
+    late_count = attendances.filter(status='Late').count()
+    department=profile.department
+    department_schedules = Schedule.objects.filter(department=department)
+    context={
+        'late_count': late_count,
+        'profile': profile,
+        'navbar': 'yourinformation',
+        'department_schedules': department_schedules,
     }
-      return render(request,'your_information.html',context)
+    print(late_count)
+    return render(request, 'your_information.html', context)
 
 @login_required(login_url='login')
 def notice(request):
@@ -118,7 +144,7 @@ def checkin(request):
     if request.method == 'POST':
         print("CHECK IN")
         user = request.user
-        dateOfQuestion = datetime.today()
+        dateOfQuestion = timezone.now().date()
         checkInTime = timezone.now()
         print(checkInTime)
         Attendance.objects.create(user=user, checkInTime=checkInTime,dateOfQuestion=dateOfQuestion)
@@ -129,13 +155,17 @@ def checkin(request):
 @csrf_exempt
 def checkout(request):
     if request.method == 'POST':
-        print("CHECK OUT") 
+        print("CHECK OUT")
         user = request.user
         checkOutTime = timezone.now()
-        current_attendance = Attendance.objects.filter(user=user).latest('checkInTime')
+        attendance_date = datetime.now(timezone.utc).date()
+        try:
+            current_attendance = Attendance.objects.filter(user=user, dateOfQuestion=attendance_date).latest('checkInTime')
+        except Attendance.DoesNotExist:
+            return JsonResponse({'message': 'No check-in record found for today'})
+
         current_attendance.checkOutTime = checkOutTime
-        current_attendance.save()
-        duration = current_attendance.calculate_duration()
+        current_attendance.duration = (checkOutTime - current_attendance.checkInTime).total_seconds() / 3600
 
         # Get the schedule of the user's department
         profile = Profile.objects.get(user=request.user)
@@ -143,55 +173,25 @@ def checkout(request):
         schedule = Schedule.objects.get(department=department)
         late_time = datetime.combine(date.today(), schedule.schedule_start) + timedelta(minutes=15)
         late_time = late_time.time()
-        attendance_date = date.today()
 
         # Get the user's time zone from the session, or use a default time zone
         user_tz = pytz.timezone(request.session.get('django_timezone', settings.TIME_ZONE))
 
-        # Get the user's schedule start time in the user's time zone
-        schedule_start = user_tz.localize(datetime.combine(attendance_date, schedule.schedule_start))
-
-        # Localize the check-in time to the user's time zone
+        # Localize the check-in and check-out times to the user's time zone
         check_in_time = current_attendance.checkInTime.astimezone(user_tz)
+        check_out_time = checkOutTime.astimezone(user_tz)
 
         # Determine the status based on the schedule and check-in time
-        check_in_time = current_attendance.checkInTime.astimezone(timezone.get_current_timezone()).time()
-        if check_in_time < late_time:
-            status = 'Present'
+        if check_in_time.time() < late_time:
+            current_attendance.status = 'Present'
         else:
-            status = 'Late'
+            current_attendance.status = 'Late'
 
-        # Get the attendance object for the user and the current date
-        attendance_date = datetime.now(timezone.utc).date()
-        try:
-            attendance = Attendance.objects.filter(user=user, dateOfQuestion=attendance_date).latest('checkInTime')
-        except Attendance.DoesNotExist:
-            attendance = None
+        current_attendance.save()
 
-        print('checkOutTime:', current_attendance.checkOutTime)
-        print('late_time:', late_time)
-        print('status:', status)
-        print(check_in_time)
-
-        # If an attendance object already exists, update its checkOutTime, duration, and status
-        if attendance is not None:
-            attendance.checkOutTime = checkOutTime
-            attendance.duration = duration
-            attendance.status = status
-            attendance.save()
-            print(attendance.checkOutTime)
-        else:
-            # Create a new attendance object
-            attendance = Attendance.objects.create(
-                user=user,
-                name=profile.user.get_full_name(),
-                duration=duration,
-                status=status,
-                dateOfQuestion=attendance_date,
-                checkOutTime=checkOutTime,
-            )
-
-    return JsonResponse({'out_time': checkOutTime, 'duration': duration})
+        return JsonResponse({'out_time': check_out_time.time().strftime('%H:%M:%S'), 'duration': current_attendance.duration})
+    response = {'message': 'Success'}
+    return JsonResponse(response)
         
 
 
@@ -246,7 +246,7 @@ def payroll(request):
     profile = Profile.objects.get(user=user_object)
     context={
         'profile':profile,
-        'navbar':'Salary-Sheet',
+        'navbar':'Salary',
         'payrolls': payrolls,
         'net_salary': net_salary,
     }

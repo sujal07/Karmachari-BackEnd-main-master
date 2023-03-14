@@ -249,7 +249,7 @@ h3 {
 }
 
 .L {
-    background-color: grey;
+    background-color:#eab676 !important;
 }
 
 @media screen and (max-width:900px) {
@@ -257,7 +257,7 @@ h3 {
         width: 85%;
     }
 }
-
+good-items L
 /* ============================= Global Styling ============================= */
 * {
     padding: 0;

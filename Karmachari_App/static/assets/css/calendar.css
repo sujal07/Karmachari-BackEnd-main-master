@@ -21,7 +21,7 @@ main {
     width: 99%;
 }
 .fc-day-grid-event {
-    width: 80%;
+    width: 75%;
     height: 30%;
     display: flex;
     justify-content: flex-start;

@@ -4,6 +4,7 @@ from datetime import datetime
 from mainapp.models import Attendance, User
 import schedule
 import calendar
+import pytz
 from django.utils.timezone import make_aware
 from datetime import date, timedelta,time
 
@@ -38,7 +39,7 @@ class Command(BaseCommand):
                 
                 if loop_date.weekday() == 5:  # Saturday is the 5th day of the week
                     for user in User.objects.all():
-                        next_saturday = loop_date + timedelta((6 - today.weekday()) % 7 + 1)
+                        next_saturday = loop_date + timedelta((7-today.weekday()) % 7+1)
                         attendance, _ = Attendance.objects.get_or_create(user=user, dateOfQuestion=next_saturday)
                         attendance.status = 'Leave'
                         attendance.checkInTime = make_aware(datetime.combine(next_saturday, time(0, 0)))

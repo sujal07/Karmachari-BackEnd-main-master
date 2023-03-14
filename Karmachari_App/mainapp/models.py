@@ -64,20 +64,6 @@ class Leaves(models.Model):
     def __str__(self):
         return self.subject
     
-# class Calendar(models.Model):
-#     user = models.ForeignKey(User,on_delete=models.CASCADE)
-#     dateOfQuestion = models.DateField(null=True)
-#     checkInTime = models.DateTimeField(auto_now_add=True)
-#     checkOutTime = models.DateTimeField(auto_now_add=True)
-#     overtime = models.DateTimeField(null=True)
-#     def __str__(self):
-#         return self.user.username
-    # def calculate_duration(self):
-    #     if self.checkOutTime:
-    #         duration = self.checkOutTime - self.checkInTime
-    #         return duration.total_seconds() / 3600.0  # Convert to hours
-    #     else:
-    #         return 0
     
 class Salary(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
@@ -97,12 +83,13 @@ class Schedule(models.Model):
 class Payroll(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     basic_pay = models.DecimalField(max_digits=8, default=10000, decimal_places=2)
-    overtime = models.DecimalField(max_digits=8,null=True, decimal_places=2)
+    bonus = models.DecimalField(max_digits=8,null=True, decimal_places=2)
     # overtime_multiplier = models.DecimalField(max_digits=8, default= 2, decimal_places=2)
     # hours_worked = models.DecimalField(max_digits=8,default= 10, blank=True, decimal_places=2)
     deductions = models.DecimalField(max_digits=8,null=True, decimal_places=2)
     net_pay = models.DecimalField(max_digits=8,default= 0, blank=True, decimal_places=2)
     date = models.DateTimeField(default=timezone.now)
+    
     def calculate_net_pay(self):
         net_pay =self.basic_pay + self.overtime - self.deductions
         return(net_pay)
@@ -149,7 +136,7 @@ class Attendance(models.Model):
             duration = self.checkOutTime - self.checkInTime
             return duration.total_seconds() / 3600 # Convert to hours
         else:
-            return 0.0
+            return 0
         
     def calculate_duration_hms(self):
         if self.checkOutTime:

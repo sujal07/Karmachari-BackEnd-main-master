@@ -10,6 +10,8 @@ from datetime import datetime, timedelta, date
 from django.views.decorators.csrf import csrf_exempt
 from .forms import LeavesForm
 from .utlis import *
+import pytz
+from django.conf import settings
 
 # Create your views here.
 def index(request):
@@ -107,7 +109,6 @@ def attendance(request):
     return render(request,'attendance.html',context)
     
     
-
 @csrf_exempt
 def checkin(request):
     # if request.is_ajax():
@@ -124,12 +125,10 @@ def checkin(request):
 
 @csrf_exempt
 def checkout(request):
-    # if request.is_ajax():
     if request.method == 'POST':
-        
         print("CHECK OUT") 
         user = request.user
-        checkOutTime =timezone.now()
+        checkOutTime = timezone.now()
         current_attendance = Attendance.objects.filter(user=user).latest('checkInTime')
         current_attendance.checkOutTime = checkOutTime
         current_attendance.save()
@@ -142,42 +141,56 @@ def checkout(request):
         late_time = datetime.combine(date.today(), schedule.schedule_start) + timedelta(minutes=15)
         late_time = late_time.time()
         attendance_date = date.today()
-    
 
+        # Get the user's time zone from the session, or use a default time zone
+        user_tz = pytz.timezone(request.session.get('django_timezone', settings.TIME_ZONE))
+
+        # Get the user's schedule start time in the user's time zone
+        schedule_start = user_tz.localize(datetime.combine(attendance_date, schedule.schedule_start))
+
+        # Localize the check-in time to the user's time zone
+        check_in_time = current_attendance.checkInTime.astimezone(user_tz)
 
         # Determine the status based on the schedule and check-in time
-        if current_attendance.checkInTime.time() < late_time:
-            status = 'Present'  # Late
+        check_in_time = current_attendance.checkInTime.astimezone(timezone.get_current_timezone()).time()
+        if check_in_time < late_time:
+            status = 'Present'
         else:
-            status = 'Late'  # Presents
-    try:
-        attendance = Attendance.objects.filter(user=user, dateOfQuestion=attendance_date).latest('checkInTime')
-    except Attendance.DoesNotExist:
-        attendance = None
-    print('checkInTime:', current_attendance.checkInTime)
-    print('late_time:', late_time)
-    print('status:', status)
+            status = 'Late'
 
-    # If an attendance object already exists, update its checkOutTime, duration, and status
-    if attendance is not None:
-        attendance.checkOutTime = checkOutTime
-        attendance.duration = duration
-        attendance.status = status
-        attendance.save()
-    else:
-        # Create a new attendance object
-        attendance = Attendance.objects.create(
-            user=user,
-            name=profile.user.get_full_name(),
-            duration=duration,
-            status=status,
-            dateOfQuestion=attendance_date,
-            checkOutTime=checkOutTime,
-        )
+        # Get the attendance object for the user and the current date
+        attendance_date = datetime.now(timezone.utc).date()
+        try:
+            attendance = Attendance.objects.filter(user=user, dateOfQuestion=attendance_date).latest('checkInTime')
+        except Attendance.DoesNotExist:
+            attendance = None
 
-        return JsonResponse({'out_time': checkOutTime, 'duration': duration})
-    response = {'message': 'Success'}
-    return JsonResponse(response)
+        print('checkOutTime:', current_attendance.checkOutTime)
+        print('late_time:', late_time)
+        print('status:', status)
+        print(check_in_time)
+
+        # If an attendance object already exists, update its checkOutTime, duration, and status
+        if attendance is not None:
+            attendance.checkOutTime = checkOutTime
+            attendance.duration = duration
+            attendance.status = status
+            attendance.save()
+            print(attendance.checkOutTime)
+        else:
+            # Create a new attendance object
+            attendance = Attendance.objects.create(
+                user=user,
+                name=profile.user.get_full_name(),
+                duration=duration,
+                status=status,
+                dateOfQuestion=attendance_date,
+                checkOutTime=checkOutTime,
+            )
+
+    return JsonResponse({'out_time': checkOutTime, 'duration': duration})
+        
+
 
 
 
@@ -217,14 +230,14 @@ def payroll(request):
     user_object = User.objects.get(username=request.user.username)
     try:
         payrolls = Payroll.objects.filter(user=user_object)
-        # payroll = Payroll.object.filter(user=user_object)
+        net_salary = None # Define net_salary before the loop
         for payroll in payrolls:
-            if payroll is not None:
-                net_salary = payroll.calculate_net_pay()
+            net_salary = payroll.calculate_net_pay()
             payroll.net_pay = net_salary
             payroll.save()
     except IndexError:
         print("No payroll object found for this user")
+        payrolls = None
     else:
         print("Payroll object found:", payrolls)
     profile = Profile.objects.get(user=user_object)
@@ -235,6 +248,7 @@ def payroll(request):
         'net_salary': net_salary,
     }
     return render(request,'Salary_Sheet.html', context)
+
 
 def view_pdf(request, pk):
     user_object = User.objects.get(username=request.user.username)

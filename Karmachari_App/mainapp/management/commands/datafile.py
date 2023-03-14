@@ -17,7 +17,7 @@ class Command(BaseCommand):
         start_datetime = datetime.combine(date, start_time)
         end_datetime = datetime.combine(date, end_time)
         random_datetime = start_datetime + timedelta(minutes=random.randint(0, int((end_datetime - start_datetime).total_seconds() / 60)))
-        return timezone.make_aware(random_datetime, pytz.UTC)
+        return timezone.make_aware(random_datetime, pytz.timezone('Asia/Kathmandu'))
 
     def handle(self, *args, **options):
         month = options['month']

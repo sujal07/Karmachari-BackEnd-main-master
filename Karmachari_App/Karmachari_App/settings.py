@@ -201,7 +201,7 @@ JAZZMIN_SETTINGS = {
         "auth.user":"fas fa-user",
         "auth.Group":"fas fa-users",
         "admin.LogEntry":"fas fa-file",
-        "mainapp.Department":"fa-solid fa-building-user",
+        "mainapp.Department":"fas fa-building",
         "mainapp.Events":"fa-light fa-calendar-circle-user",
         "mainapp.Leaves":"fas fa-door-open menu-icon",
         "mainapp.Notice":"fa-sharp fa-solid fa-bell",

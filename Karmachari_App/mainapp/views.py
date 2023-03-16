@@ -11,6 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from .forms import LeavesForm
 from .utlis import *
 import pytz
+import json
 from django.conf import settings
 
 # Create your views here.
@@ -286,3 +287,89 @@ def download_pdf(request, pk):
     response = HttpResponse(pdf, content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="payroll.pdf"'
     return response
+
+def chart(request):
+    end_date = datetime.today()
+    start_date = end_date - timedelta(days=7)
+    
+    user_object = User.objects.get(username=request.user.username)
+    profile = Profile.objects.get(user=user_object)
+    start_date_str = start_date.isoformat()
+    start_end_str = end_date.isoformat()
+    
+    formatted_start_date = date_formatting(start_date_str)
+    formatted_end_date = date_formatting(start_end_str)
+    
+    weekly_attendance = Attendance.objects.filter(user=user_object, dateOfQuestion__range=[formatted_start_date, formatted_end_date])
+
+    durations = [0, 0, 0, 0, 0, 0, 0]
+    for attendance in weekly_attendance:
+        i=attendance
+        day_of_week = attendance.dateOfQuestion.weekday()
+        if attendance.duration is None:
+            attendance.duration = 0
+            durations[day_of_week] += attendance.duration
+        else:
+            durations[day_of_week] += attendance.duration
+        # print(durations[day_of_week])
+        durations = [10,23,54,76,8,32,45]
+    
+    # # Prepare the data for the chart
+    data = {}
+    for i, day in enumerate(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']):
+        data[day] = durations[i]
+    print(data)
+    # print(formatted_end_date)
+    context={
+            'user': user_object,
+            'profile': profile,
+            'attendances': 'data'
+    }
+    return render(request,'chart.html', context)
+
+def chart_1(request):
+    end_date = datetime.today()
+    start_date = end_date - timedelta(days=7)
+    
+    start_date_str = start_date.isoformat()
+    start_end_str = end_date.isoformat()
+    
+    formatted_start_date = date_formatting(start_date_str)
+    formatted_end_date = date_formatting(start_end_str)
+    
+    weekly_attendance = Attendance.objects.filter(dateOfQuestion__range=[formatted_start_date, formatted_end_date])
+
+    durations = [0, 0, 0, 0, 0, 0, 0]
+    for attendance in weekly_attendance:
+        i=attendance
+        day_of_week = attendance.dateOfQuestion.weekday()
+        if attendance.duration is None:
+            attendance.duration = 0
+            durations[day_of_week] += attendance.duration
+        else:
+            durations[day_of_week] += attendance.duration
+        print(durations[day_of_week])
+        # durations = [10,23,54,76,8,32,45]
+    
+    # # Prepare the data for the chart
+    data = {}
+    for i, day in enumerate(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']):
+        data[day] = durations[i]
+    print(data)
+    # print(formatted_end_date)
+    context={
+            'attendances': 'data'
+    }
+    return render(request,'chart.html', context)
+
+
+def attendance_chart(request):
+    user=request.user
+    labels = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+    first_day, last_day = get_current_month_range()
+    data=Attendance.objects.filter(user=user, dateOfQuestion__range=(first_day, last_day))
+    values = [obj.duration for obj in data]
+    print(values)
+    context = {'labels': json.dumps(labels), 'values': json.dumps(values)}
+    return render(request, 'attendance_chart.html', context)
+

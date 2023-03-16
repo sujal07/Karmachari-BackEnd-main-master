@@ -114,3 +114,7 @@ main {
     transform: translateX(1rem);
     }
 }
+.fc-sat .fc-day-grid-event .fc-title{
+    display: none!important;
+
+}

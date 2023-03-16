@@ -1,0 +1,72 @@
+<!-- Include the Chart.js library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Create a canvas element to hold the chart -->
+<canvas id="attendance-chart" width="800" height="400"></canvas>
+
+<!-- Create a script to populate the chart with data -->
+<script>
+  // Retrieve the attendance data from the server (you will need to write the code to do this)
+  var attendanceData = getAttendanceData();
+
+  // Extract the day and hour data from the attendance data
+  var days = Object.keys(attendanceData);
+  var hours = Object.keys(attendanceData[days[0]]);
+
+  // Create an empty array to hold the data for each day
+  var dayData = [];
+
+  // Iterate over each day in the month
+  for (var i = 1; i <= days.length; i++) {
+    // Create an object to hold the data for this day
+    var day = {x: i, y: 0};
+
+    // Iterate over each hour in the day
+    for (var j = 0; j < hours.length; j++) {
+      // Add up the total number of hours worked by all users during this hour
+      day.y += attendanceData[days[i - 1]][hours[j]];
+    }
+
+    // Add the day's data to the array
+    dayData.push(day);
+  }
+
+  // Create the chart
+  var ctx = document.getElementById('attendance-chart').getContext('2d');
+  var chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      datasets: [{
+        label: 'Total Hours Worked',
+        data: dayData,
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        xAxes: [{
+          type: 'linear',
+          position: 'bottom',
+          ticks: {
+            stepSize: 1,
+            min: 1,
+            max: days.length,
+            callback: function(value, index, values) {
+              // Convert the day number to a date string (e.g. "2023-03-01")
+              var date = new Date();
+              date.setDate(value);
+              return date.toISOString().substring(0, 10);
+            }
+          }
+        }],
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  });
+</script>

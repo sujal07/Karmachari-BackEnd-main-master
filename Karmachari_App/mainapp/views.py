@@ -10,6 +10,8 @@ from datetime import datetime, timedelta, date
 from django.views.decorators.csrf import csrf_exempt
 from .forms import LeavesForm
 from .utlis import *
+from calendar import monthrange
+from django.db.models import Count
 import pytz
 import json
 from django.conf import settings
@@ -288,88 +290,48 @@ def download_pdf(request, pk):
     response['Content-Disposition'] = 'attachment; filename="payroll.pdf"'
     return response
 
-def chart(request):
-    end_date = datetime.today()
-    start_date = end_date - timedelta(days=7)
-    
+def chart(request, year, month):
     user_object = User.objects.get(username=request.user.username)
-    profile = Profile.objects.get(user=user_object)
-    start_date_str = start_date.isoformat()
-    start_end_str = end_date.isoformat()
+    # Convert year and month to a timezone-aware datetime object
+    start_date = timezone.datetime(int(year), int(month), 1, tzinfo=timezone.get_current_timezone())
     
-    formatted_start_date = date_formatting(start_date_str)
-    formatted_end_date = date_formatting(start_end_str)
+    # Find the number of days in the specified month
+    _, num_days = monthrange(start_date.year, start_date.month)
     
-    weekly_attendance = Attendance.objects.filter(user=user_object, dateOfQuestion__range=[formatted_start_date, formatted_end_date])
+    # Calculate the end date as the last day of the specified month
+    end_date = timezone.datetime(int(year), int(month), num_days, 23, 59, 59, tzinfo=timezone.get_current_timezone())
 
-    durations = [0, 0, 0, 0, 0, 0, 0]
-    for attendance in weekly_attendance:
-        i=attendance
-        day_of_week = attendance.dateOfQuestion.weekday()
-        if attendance.duration is None:
-            attendance.duration = 0
-            durations[day_of_week] += attendance.duration
-        else:
-            durations[day_of_week] += attendance.duration
-        # print(durations[day_of_week])
-        durations = [10,23,54,76,8,32,45]
-    
-    # # Prepare the data for the chart
-    data = {}
-    for i, day in enumerate(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']):
-        data[day] = durations[i]
-    print(data)
-    # print(formatted_end_date)
-    context={
-            'user': user_object,
-            'profile': profile,
-            'attendances': 'data'
-    }
-    return render(request,'chart.html', context)
+    # Query the database to get the counts for each status for the specified user and month
+    status_counts = Attendance.objects.filter(user=user_object, dateOfQuestion__range=(start_date, end_date)).values('status').annotate(count=Count('status'))
 
-def chart_1(request):
-    end_date = datetime.today()
-    start_date = end_date - timedelta(days=7)
-    
-    start_date_str = start_date.isoformat()
-    start_end_str = end_date.isoformat()
-    
-    formatted_start_date = date_formatting(start_date_str)
-    formatted_end_date = date_formatting(start_end_str)
-    
-    weekly_attendance = Attendance.objects.filter(dateOfQuestion__range=[formatted_start_date, formatted_end_date])
+    # Create a list of labels and values for the pie chart
+    labels = [status['status'] for status in status_counts]
+    values = [status['count'] for status in status_counts]
 
-    durations = [0, 0, 0, 0, 0, 0, 0]
-    for attendance in weekly_attendance:
-        i=attendance
-        day_of_week = attendance.dateOfQuestion.weekday()
-        if attendance.duration is None:
-            attendance.duration = 0
-            durations[day_of_week] += attendance.duration
-        else:
-            durations[day_of_week] += attendance.duration
-        print(durations[day_of_week])
-        # durations = [10,23,54,76,8,32,45]
-    
-    # # Prepare the data for the chart
-    data = {}
-    for i, day in enumerate(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']):
-        data[day] = durations[i]
-    print(data)
-    # print(formatted_end_date)
-    context={
-            'attendances': 'data'
-    }
-    return render(request,'chart.html', context)
+    # Pass the labels and values to the template context
+    context = {'labels': labels, 'values': values}
+
+    return render(request, 'chart.html', context)
 
 
-def attendance_chart(request):
-    user=request.user
-    labels = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-    first_day, last_day = get_current_month_range()
-    data=Attendance.objects.filter(user=user, dateOfQuestion__range=(first_day, last_day))
-    values = [obj.duration for obj in data]
-    print(values)
-    context = {'labels': json.dumps(labels), 'values': json.dumps(values)}
-    return render(request, 'attendance_chart.html', context)
+def generate_chart(request):
+    today = date.today()
+    year = today.year
+    month = today.month
+    print(year,month)
+    # context = {
+    #     'profile': profile,
+    #     'year':year,
+    #     'month':month,
+        
+    #     }
+    if request.method == 'GET':
+        year = request.GET.get('year',year)
+        month = request.GET.get('month',month)
+        # if year and month:
+        #     context['year'] = year
+        #     context['month'] = month
+        return redirect('chart', int(year), int(month))
+    return redirect('chart',int(year),int(month))
+
 

@@ -1,0 +1,19 @@
+{%load static%}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Chart Generator</title>
+  </head>
+  <body>
+    {% comment %} {%include 'Nav_Sidebar.html'%} {% endcomment %}
+    <h1>Generate a Chart</h1>
+    <form action="{% url 'generate_chart' %}" method="get">
+      <label for="year">Year:</label>
+      <input type="number" id="year" name="year" required>
+      <label for="month">Month:</label>
+      <input type="number" id="month" name="month" min="1" max="12" required>
+      <input type="submit" value="Generate">
+    </form>
+  </body>
+</html>

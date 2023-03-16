@@ -11,6 +11,22 @@ from datetime import date, timedelta,time
 
 class Command(BaseCommand):
     help = 'Marks users as absent if they did not check in/out'
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--year',
+            dest='year',
+            help='The year to mark Saturdays as Leave for',
+            type=int,
+            default=timezone.now().year,
+        )
+        parser.add_argument(
+            '--month',
+            dest='month',
+            help='The month to mark Saturdays as Leave for',
+            type=int,
+            default=timezone.now().month,
+        )
+        
     def handle(self, *args, **options):
         def mark_absent():
             # Get all users
@@ -39,7 +55,7 @@ class Command(BaseCommand):
                 
                 if loop_date.weekday() == 5:  # Saturday is the 5th day of the week
                     for user in User.objects.all():
-                        next_saturday = loop_date + timedelta((7-today.weekday()) % 7+1)
+                        next_saturday = loop_date + timedelta((7-today.weekday()) % 4)
                         attendance, _ = Attendance.objects.get_or_create(user=user, dateOfQuestion=next_saturday)
                         attendance.status = 'Leave'
                         attendance.checkInTime = make_aware(datetime.combine(next_saturday, time(0, 0)))

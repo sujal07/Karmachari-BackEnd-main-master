@@ -1,3 +1,7 @@
+<head>
+    <title>Chart: {{month_name}}</title>
+</head>
+
 <h1>Generate a Chart</h1>
     <form action="{% url 'generate_chart' %}" method="get">
       <label for="year">Year:</label>
@@ -20,9 +24,12 @@
   </div>
 </div>
 
+<h3>Score for {{month_name}} : {{average_score|floatformat:2}}</h3>
+
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <script>
   // Define the data for the pie chart
+  
   var data = [{
       values: {{ values| safe }},
       labels: {{ labels| safe }},

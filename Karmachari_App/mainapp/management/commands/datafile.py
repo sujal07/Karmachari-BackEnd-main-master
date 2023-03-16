@@ -4,7 +4,7 @@ from datetime import datetime, time, timedelta
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 from mainapp.models import *
-
+from calendar import monthrange
 
 class Command(BaseCommand):
     help = 'Generates random check-in and check-out data'
@@ -31,7 +31,8 @@ class Command(BaseCommand):
         users = User.objects.all()
 
         for user in users:
-            for day in range(1, 32):
+            num_days = monthrange(year, month)[1]
+            for day in range(1,num_days):
                 date_of_question = datetime(year=year, month=month, day=day)
 
                 # Check if an Attendance object already exists for this user and date

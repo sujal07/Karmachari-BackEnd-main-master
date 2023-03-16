@@ -83,8 +83,8 @@ calendar.render();
         fixedWeekCount: false,
            visibleRange: function(currentDate) {
             return {
-                start: moment(currentDate).startOf('month'),
-                end: moment(currentDate).startOf('month').add(4, 'weeks').endOf('week')
+              start: moment(currentDate).subtract(1, 'month').startOf('month'),
+              end: moment(currentDate).add(1, 'month').endOf('month')
             };
         },})})
            

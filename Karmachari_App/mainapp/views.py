@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib import auth
 from django.contrib import messages
+
 from django.contrib.auth.decorators import login_required
 from mainapp.models import *
 from django.utils import timezone
@@ -11,7 +12,7 @@ from django.views.decorators.csrf import csrf_exempt
 from .forms import LeavesForm
 from .utlis import *
 from calendar import monthrange
-from django.db.models import Count
+from django.db.models import Count, Q
 import pytz
 import json
 from django.conf import settings
@@ -290,28 +291,59 @@ def download_pdf(request, pk):
     response['Content-Disposition'] = 'attachment; filename="payroll.pdf"'
     return response
 
+
+
+import calendar
+
 def chart(request, year, month):
     user_object = User.objects.get(username=request.user.username)
     # Convert year and month to a timezone-aware datetime object
-    start_date = timezone.datetime(int(year), int(month), 1, tzinfo=timezone.get_current_timezone())
+    start_date = timezone.datetime(int(year), int(month), 1, tzinfo=timezone.get_current_timezone()).date()
     
     # Find the number of days in the specified month
     _, num_days = monthrange(start_date.year, start_date.month)
     
     # Calculate the end date as the last day of the specified month
-    end_date = timezone.datetime(int(year), int(month), num_days, 23, 59, 59, tzinfo=timezone.get_current_timezone())
+    end_date = timezone.datetime(int(year), int(month), num_days, 23, 59, 59, tzinfo=timezone.get_current_timezone()).date()
 
     # Query the database to get the counts for each status for the specified user and month
-    status_counts = Attendance.objects.filter(user=user_object, dateOfQuestion__range=(start_date, end_date)).values('status').annotate(count=Count('status'))
+    status_counts = Attendance.objects.filter(Q(user=user_object) & Q(dateOfQuestion__range=(start_date, end_date))).values('status').annotate(count=Count('status'))
 
+    # Calculate the score
+    total_present = 0
+    total_late = 0
+    total_absent = 0
+    for status in status_counts:
+        if status['status'] == 'Present':
+            total_present = status['count']
+        elif status['status'] == 'Late':
+            total_late = status['count']
+        elif status['status'] == 'Absent':
+            total_absent = status['count']
+    total_score = total_present * 10 + total_late * 8 + total_absent * (-5)
+    total_days = total_present + total_late + total_absent
+    if total_days == 0:
+        average_score = 0
+    else:
+        average_score = total_score / total_days
+    
     # Create a list of labels and values for the pie chart
     labels = [status['status'] for status in status_counts]
     values = [status['count'] for status in status_counts]
+    
+    # Get the month name from the month number
+    month_name = calendar.month_name[int(month)]
 
-    # Pass the labels and values to the template context
-    context = {'labels': labels, 'values': values}
+    # Pass the labels, values, month name, and average score to the template context
+    context = {'labels': labels,
+               'values': values,
+               'month_name': month_name,
+               'average_score': average_score,
+               'navbar': 'chart'}
+    print(average_score)
 
     return render(request, 'chart.html', context)
+
 
 
 def generate_chart(request):

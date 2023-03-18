@@ -1,0 +1,21 @@
+{% extends "admin/change_list.html" %}
+{% load static %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        window.addEventListener("DOMContentLoaded", function() {
+            var charts = document.getElementsByTagName("canvas");
+            Array.prototype.forEach.call(charts, function(chart) {
+                new Chart(chart, JSON.parse(chart.dataset.chartData));
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="chart-container">
+        <canvas data-chart-data='{{ chart_data|safe }}'></canvas>
+    </div>
+{% endblock %}

@@ -297,6 +297,7 @@ import calendar
 
 def chart(request, year, month):
     user_object = User.objects.get(username=request.user.username)
+    profile=Profile.objects.get(user=user_object)
     # Convert year and month to a timezone-aware datetime object
     start_date = timezone.datetime(int(year), int(month), 1, tzinfo=timezone.get_current_timezone()).date()
     
@@ -339,6 +340,7 @@ def chart(request, year, month):
                'values': values,
                'month_name': month_name,
                'average_score': average_score,
+               'profile':profile,
                'navbar': 'chart'}
     print(average_score)
 

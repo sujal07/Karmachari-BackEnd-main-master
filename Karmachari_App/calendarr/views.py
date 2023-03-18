@@ -43,6 +43,8 @@ def calendar(request):
             className = 'fc-attendance-leave'
         elif attendance.status == 'Absent':
             className = 'fc-attendance-absent'
+        elif attendance.status == 'Holiday':
+            className = 'fc-attendance-Holiday'
         else:
             className = ''
             

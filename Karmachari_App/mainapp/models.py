@@ -115,6 +115,7 @@ class Attendance(models.Model):
         ('Present', 'Present'),
         ('Absent', 'Absent'),
         ('Leave', 'Leave'),
+        ('Holiday','Holiday')
     )
     user = models.ForeignKey(User,on_delete=models.CASCADE,null=True)
     dateOfQuestion = models.DateField(null=True)

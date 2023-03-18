@@ -1,7 +1,7 @@
 <head>
     <title>Chart: {{month_name}}</title>
 </head>
-
+<body>
 <h1>Generate a Chart</h1>
     <form action="{% url 'generate_chart' %}" method="get">
       <label for="year">Year:</label>
@@ -38,8 +38,8 @@
 
   // Define the layout for the pie chart
   var layout = {
-      height: 400,
-      margin: {
+    height: 400,
+    margin: {
           l: 0,
           r: 0,
           b: 0,
@@ -50,3 +50,4 @@
   // Render the pie chart in the 'chart' div
   Plotly.newPlot('chart', data, layout);
 </script>
+</body>

@@ -1,32 +1,42 @@
-
-<div>
-  <canvas id="myChart"></canvas>
-</div>
-
-
-{% block scripts %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+<canvas id="myChart"></canvas>
 <script>
+var data = JSON.parse('{{ data|json_encode|escapejs }}');
 var ctx = document.getElementById('myChart').getContext('2d');
 var myChart = new Chart(ctx, {
     type: 'bar',
     data: {
-        labels: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-        datasets: [{
-            label: 'Attendance',
-            data: {{ values }},
-            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-            borderColor: 'rgba(255, 99, 132, 1)',
-            borderWidth: 1
-        }]
+        labels: data.map(function(item) { return item.date; }),
+        datasets: [
+            {
+                label: 'Present',
+                data: data.filter(function(item) { return item.status == 'Present'; }).map(function(item) { return item.count; }),
+                backgroundColor: 'green'
+            },
+            {
+                label: 'Absent',
+                data: data.filter(function(item) { return item.status == 'Absent'; }).map(function(item) { return item.count; }),
+                backgroundColor: 'red'
+            },
+            {
+                label: 'Leave',
+                data: data.filter(function(item) { return item.status == 'Leave'; }).map(function(item) { return item.count; }),
+                backgroundColor: 'yellow'
+            },
+            {
+                label: 'Late',
+                data: data.filter(function(item) { return item.status == 'Late'; }).map(function(item) { return item.count; }),
+                backgroundColor: 'orange'
+            },
+        ]
     },
     options: {
         scales: {
-            y: {
-                beginAtZero: true
-            }
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
         }
     }
 });
 </script>
-{% endblock %}

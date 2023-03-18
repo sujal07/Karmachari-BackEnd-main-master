@@ -29,7 +29,7 @@ class Command(BaseCommand):
                 for user in User.objects.all():
                     next_saturday = loop_date + timedelta((7-today.weekday()) % 4)
                     attendance, _ = Attendance.objects.get_or_create(user=user, dateOfQuestion=next_saturday)
-                    attendance.status = 'Leave'
+                    attendance.status = 'Holiday'
                     attendance.checkInTime = make_aware(datetime.combine(next_saturday, time(0, 0)))
                     attendance.checkOutTime = make_aware(datetime.combine(next_saturday, time(0, 0)))
                     attendance.save()

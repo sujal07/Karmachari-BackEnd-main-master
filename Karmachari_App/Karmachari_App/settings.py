@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'fontawesomefree',
+    # 'chartjs',
     'mainapp',
     'password_reset',
     'calendarr',

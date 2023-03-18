@@ -56,7 +56,6 @@ def calendar(request):
             'end': end,
             'className': 'attendance ' + className,
         })
-        print(events)
     context = {
         'events': json.dumps(events),
         'profile': profile,

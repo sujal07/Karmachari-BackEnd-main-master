@@ -10,8 +10,8 @@ class Command(BaseCommand):
     help = 'Generates random check-in and check-out data'
 
     def add_arguments(self, parser):
-        parser.add_argument('month', type=int, help='Month number (1-12)')
         parser.add_argument('year', type=int, help='Year number (e.g. 2023)')
+        parser.add_argument('month', type=int, help='Month number (1-12)')
 
     def random_time(self, date, start_time, end_time):
         start_datetime = datetime.combine(date, start_time)
@@ -32,7 +32,7 @@ class Command(BaseCommand):
 
         for user in users:
             num_days = monthrange(year, month)[1]
-            for day in range(1,num_days):
+            for day in range(1,num_days+1):
                 date_of_question = datetime(year=year, month=month, day=day)
 
                 # Check if an Attendance object already exists for this user and date

@@ -20,7 +20,7 @@ class Command(BaseCommand):
         users = User.objects.all()
         for user in users:
             num_days = monthrange(year, month)[1]
-            absent_dates = random.sample(range(1, num_days+1), random.randint(0, 4))
+            absent_dates = random.sample(range(1, num_days+1), random.randint(0, 2))
 
         
             for day in range(1, num_days+1):
@@ -30,7 +30,7 @@ class Command(BaseCommand):
                     if not Attendance.objects.filter(user=user, dateOfQuestion=date_of_question).exists():
                         Attendance.objects.create(
                                                 user=user, 
-                                                status='Leave',
+                                                status='Absent',
                                                 dateOfQuestion=date_of_question,
                                                 checkInTime=make_aware(datetime.combine(date_of_question, datetime.min.time())), 
                                                 checkOutTime=make_aware(datetime.combine(date_of_question, datetime.min.time())))

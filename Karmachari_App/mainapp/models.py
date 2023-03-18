@@ -121,7 +121,7 @@ class Attendance(models.Model):
     dateOfQuestion = models.DateField(null=True)
     checkInTime = models.DateTimeField(null=True)
     checkOutTime = models.DateTimeField(null=True)
-    overtime = models.DateTimeField(null=True,blank=True)
+    # overtime = models.DateTimeField(null=True,blank=True)
     name=models.CharField(max_length=255,null=True)
     duration = models.FloatField(null=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES)

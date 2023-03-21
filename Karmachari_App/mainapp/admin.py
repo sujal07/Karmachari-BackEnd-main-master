@@ -11,7 +11,7 @@ from django.db.models.functions import TruncDate
 
 # Register your models here.
 class ProfileAdmin(admin.ModelAdmin):
-    list_display=('user','department','phone_number','dob')
+    list_display=('user','department','phone_number','dob','post')
     # fields=('user','department','phone_number','dob','profileimg')
     readonly_fields = ['img_preview']
     
@@ -76,14 +76,15 @@ class AttendanceAdmin(admin.ModelAdmin):
         
 class PayrollAdmin(admin.ModelAdmin):
     # form = PayrollForm
-    fields = ('user','basic_pay', 'overtime', 'deductions')
+    fields = ('user','basic_pay', 'deductions')
     readonly_fields = ['net_pay']
     list_filter = [
         ('date', DateFilter),
     ]
     
     
-    
+class SalaryAdmin(admin.ModelAdmin):
+    list_display=('post','hourly_rate')
     
 admin.site.register(Profile,ProfileAdmin)
 admin.site.register(Notice,NoticeAdmin)
@@ -92,7 +93,7 @@ admin.site.register(Leaves,LeavesAdmin)
 admin.site.register(Events)
 admin.site.register(Payroll,PayrollAdmin)
 admin.site.register(AllowedIP)
-admin.site.register(Salary)
+admin.site.register(Salary,SalaryAdmin)
 admin.site.register(Schedule,ScheduleAdmin)
 admin.site.register(Attendance,AttendanceAdmin)
 

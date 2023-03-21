@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib import auth
 from django.contrib import messages
-
+import calendar
 from django.contrib.auth.decorators import login_required
 from mainapp.models import *
 from django.utils import timezone
@@ -293,7 +293,7 @@ def download_pdf(request, pk):
 
 
 
-import calendar
+
 
 def chart(request, year, month):
     user_object = User.objects.get(username=request.user.username)

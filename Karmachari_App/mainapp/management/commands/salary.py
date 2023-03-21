@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 from datetime import datetime
-from mainapp.models import Attendance, Payroll
+from mainapp.models import Attendance, Payroll,Salary,Profile
 from django.contrib.auth.models import User
 from datetime import datetime, timedelta
 
@@ -19,6 +19,9 @@ class Command(BaseCommand):
         users = User.objects.all()
 
         for user in users:
+            profile=Profile.objects.get(user=user)
+            salary=profile.post
+            hourly_rate=salary.hourly_rate
             attendance = Attendance.objects.filter(user=user, dateOfQuestion__year=year, dateOfQuestion__month=month)
 
             if attendance:
@@ -27,7 +30,7 @@ class Command(BaseCommand):
                 total_hours_worked = 0
 
             late_count = attendance.filter(status='Late').count()
-            basic_pay = total_hours_worked * 130
+            basic_pay = total_hours_worked *hourly_rate
             bonus = basic_pay * 0.1
             deductions = late_count * 25
             net_pay = basic_pay + bonus - deductions

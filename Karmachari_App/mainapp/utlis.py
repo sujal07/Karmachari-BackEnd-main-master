@@ -1,8 +1,11 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from .models import *
 from xhtml2pdf import pisa
 from io import BytesIO
 from django.template.loader import get_template
+import jwt
+from django.conf import settings
+
 
 def check_allowed_ip(request):
     x_forw_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -34,3 +37,8 @@ def date_formatting(datte):
     date_string = date_string.strip('“”')
     date_object = datetime.strptime(date_string, '%Y-%m-%dT%H:%M:%S.%f')
     return(date_object.date())
+
+def generate_jwt_token(user_id):
+    payload = {'user_id': user_id}
+    token = jwt.encode(payload, settings.JWT_SECRET_KEY, algorithm='HS256')
+    return token

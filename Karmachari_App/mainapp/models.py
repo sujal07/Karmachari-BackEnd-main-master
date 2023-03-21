@@ -9,13 +9,12 @@ from django.utils.html import mark_safe
 
 User=get_user_model()
 
-# Create your models here.
-# deparment= (
-#         ('BCT','BCT'),
-#         ('BCE', 'BCE'),
-#         ('BEX','BEX')
-#     )
-
+class Salary(models.Model):
+    post = models.CharField(max_length=100, null=True)
+    hourly_rate = models.FloatField(null=True)
+    def __str__(self):
+        return self.post
+    
 class Department(models.Model):
     name = models.CharField(max_length=100, default="Everyone", null=True)
     # Post = models.CharField(max_length=100, null=True)
@@ -27,6 +26,7 @@ class Profile(models.Model):
     userID = uuid.uuid4()
     profileimg = models.ImageField(upload_to='profile_images',default='img.png')
     dob = models.DateField()
+    post=models.ForeignKey(Salary, on_delete=models.CASCADE,null=True)
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
     phone_number = models.CharField(max_length=100, default=0)
     def __str__(self):
@@ -65,13 +65,6 @@ class Leaves(models.Model):
         return self.subject
     
     
-class Salary(models.Model):
-    user = models.ForeignKey(User,on_delete=models.CASCADE)
-    post = models.CharField(max_length=100, null=True)
-    amount = models.FloatField(null=True)
-    def __str__(self):
-        return self.user.username
-    
 class Schedule(models.Model):
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
     schedule_start = models.TimeField()
@@ -84,8 +77,6 @@ class Payroll(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     basic_pay = models.DecimalField(max_digits=8, default=10000, decimal_places=2)
     bonus = models.DecimalField(max_digits=8,null=True, decimal_places=2)
-    # overtime_multiplier = models.DecimalField(max_digits=8, default= 2, decimal_places=2)
-    # hours_worked = models.DecimalField(max_digits=8,default= 10, blank=True, decimal_places=2)
     deductions = models.DecimalField(max_digits=8,null=True, decimal_places=2)
     net_pay = models.DecimalField(max_digits=8,default= 0, blank=True, decimal_places=2)
     date = models.DateTimeField(default=timezone.now)
@@ -159,6 +150,18 @@ class Events(models.Model):
  
     class Meta:  
         db_table = "tblevents"
+        
+class Device(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    device_id = models.CharField(max_length=1000)
+    
+    def set_device_id(self, device_id):
+        self.device_id = device_id
+        self.save()
+    
+    def __str__(self):
+        return self.user.username
 
 
         

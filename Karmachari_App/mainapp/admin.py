@@ -7,7 +7,12 @@ from django.urls import path
 from django.db.models import Q
 from django.db.models import Count
 import json
+from .charts import attendance_chart_data
 from django.db.models.functions import TruncDate
+import matplotlib.pyplot as plt
+import numpy as np
+import io
+import base64
 
 # Register your models here.
 class ProfileAdmin(admin.ModelAdmin):
@@ -42,35 +47,28 @@ class DateFilter(admin.DateFieldListFilter):
     
 
 class AttendanceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'dateOfQuestion', 'checkInTime', 'checkOutTime', 'status', 'attendance_chart')
+    list_display = ('name', 'dateOfQuestion', 'checkInTime', 'checkOutTime', 'status')
     search_fields = ['name', 'user__username']
     list_filter = [('dateOfQuestion', admin.DateFieldListFilter)]
-    change_list_template = 'admin/change_list_graph.html'
+    
+    change_list_template = 'attendance_change_list.html'
 
-    def attendance_chart(self, obj):
-        # Code for generating the chart
-        chart_html = '<canvas id="myChart"></canvas>'
-        return format_html(chart_html)
-    attendance_chart.short_description = 'Attendance Chart'
+    def changelist_view(self, request, extra_context=None):
+        response = super().changelist_view(request, extra_context=extra_context)
+        chart_data = self.attendance_chart_data()
+        response.context_data['chart_data'] = chart_data
+        return response
 
-    def get_search_results(self, request, queryset, search_term):
-        if not search_term:
-            return queryset, False
-        try:
-            user = User.objects.get(username=search_term)
-            return queryset.filter(Q(name=search_term) | Q(user=user)), True
-        except User.DoesNotExist:
-            return queryset.filter(name=search_term), True
-
-    def get_search_results(self, request, queryset, search_term):
-        if not search_term:
-            return queryset, False
-        try:
-            user = User.objects.get(username=search_term)
-            return queryset.filter(Q(name=search_term) | Q(user=user)), True
-        except User.DoesNotExist:
-            return queryset.filter(name=search_term), True
-        
+    def attendance_chart_data(self):
+        attendance_data = Attendance.objects.values('status').annotate(status_count=Count('status'))
+        status_labels = [attendance['status'] for attendance in attendance_data]
+        status_counts = [attendance['status_count'] for attendance in attendance_data]
+        chart_data = {
+            'labels': status_labels,
+            'data': status_counts,
+        }
+        return chart_data
+    
     
 
         
